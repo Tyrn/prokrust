@@ -4,6 +4,6 @@ import kotlin.test.assertEquals
 class UnitTest {
     @Test
     fun testInitials() {
-        assertEquals(expected = "Alfa", actual = initials("Alfa"))
+        assertEquals("Alfa", initials("Alfa"))
     }
 }
