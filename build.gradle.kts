@@ -24,7 +24,11 @@ kotlin {
         }
     }
     sourceSets {
-        val nativeMain by getting
+        val nativeMain by getting {
+            dependencies {
+                implementation("com.github.ajalt.clikt:clikt:4.2.2")
+            }
+        }
         val nativeTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
