@@ -27,8 +27,7 @@ fun initials(authors: String): String {
             }
         }
         var head = name[0].toString()
-        val tail = name.slice(1..name.lastIndex)
-        for (ch in tail) {
+        for (ch in name.slice(1..name.lastIndex)) {
             head += ch.toString()
             if (ch.isUpperCase()) return head
         }
