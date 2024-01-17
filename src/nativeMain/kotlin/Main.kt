@@ -78,20 +78,17 @@ fun initials(authors: String): String {
         .replace("\"", " ")
         .split(",")
         .filter { author -> author.replace(".", "").replace("-", "").trim().isNotEmpty() }
-        .map { author ->
+        .joinToString(",") { author ->
             author
                 .split("-")
                 .filter { barrel -> barrel.replace(".", "").trim().isNotEmpty() }
-                .map { barrel ->
+                .joinToString("-") { barrel ->
                     barrel
                         .split(rDots)
                         .filter { name -> name.isNotEmpty() }
-                        .map { name -> formInitial(name) }
-                        .joinToString(".")
-                }
-                .joinToString("-") + "."
+                        .joinToString(".") { name -> formInitial(name) }
+                } + "."
         }
-        .joinToString(",")
 }
 
 class Shoot : CliktCommand() {
