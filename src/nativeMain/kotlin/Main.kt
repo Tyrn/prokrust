@@ -1,7 +1,7 @@
 import com.github.ajalt.clikt.core.CliktCommand
 
 val rDots = """[\s.]+""".toRegex()
-val rQuotedSubstrings = """\"(?:\\.|[^\"\\])*\"""".toRegex()
+val rQuotedSubstrings = """"(?:\\.|[^"\\])*"""".toRegex()
 
 fun initials(names: String): String {
    return names
