@@ -4,6 +4,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven(url = "https://jitpack.io")
 }
 
 kotlin {
@@ -27,6 +28,7 @@ kotlin {
         val nativeMain by getting {
             dependencies {
                 implementation("com.github.ajalt.clikt:clikt:4.2.2")
+                implementation("com.github.timusus:KTagLib:release-SNAPSHOT")
             }
         }
         val nativeTest by getting {
