@@ -27,7 +27,6 @@ kotlin {
         val nativeMain by getting {
             dependencies {
                 implementation("com.github.ajalt.clikt:clikt:4.2.2")
-                implementation("net.jthink:jaudiotagger:3.0.1")
             }
         }
         val nativeTest by getting {
