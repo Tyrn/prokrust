@@ -1,4 +1,7 @@
 import com.github.ajalt.clikt.core.CliktCommand
+import kotlin.math.log
+import kotlin.math.pow
+import kotlin.math.min
 
 val nobiliaryParticles = arrayOf(
     "von", "фон", "van", "ван", "der", "дер", "til", "тиль",
@@ -52,6 +55,31 @@ fun initials(authors: String): String {
                         .joinToString(".") { name -> formInitial(name) }
                 } + "."
         }
+}
+
+fun humanFine(bytes: Long): String {
+    val unitList = arrayOf(
+        Pair("", 0),
+        Pair("kB", 0),
+        Pair("MB", 1),
+        Pair("GB", 2),
+        Pair("TB", 2),
+        Pair("PB", 2),
+    )
+    if (bytes > 1) {
+        val exponent = min(log(bytes.toDouble(), 1024.toDouble()).toInt(), unitList.size - 1)
+        val quotient = bytes.toDouble() / 1024.toDouble().pow(exponent)
+        println("exponent: $exponent")
+        when (unitList[exponent]) {
+            Pair("", 0) -> return quotient.toString()
+            Pair("kB", 0) -> return quotient.toString() + "kB"
+            Pair("MB", 1) -> return quotient.toString() + "MB"
+            Pair("GB", 2) -> return quotient.toString() + "GB"
+            Pair("TB", 2) -> return quotient.toString() + "TB"
+            Pair("PB", 2) -> return quotient.toString() + "PB"
+        }
+    }
+    return "0"
 }
 
 class Shoot : CliktCommand() {

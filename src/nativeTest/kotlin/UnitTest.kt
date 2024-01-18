@@ -1,3 +1,4 @@
+import kotlin.math.pow
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -60,5 +61,19 @@ class UnitTest {
         assertEquals("G.S.P.Jr.", initials("George Smith Patton Jr."))
         assertEquals("Д.С.П.ст.", initials("Джордж Смит паттон ст"))
         assertEquals("R.Sr.", initials("Redington Sr"))
+    }
+
+    @Test
+    fun testHumanFine() {
+        assertEquals("0", humanFine(0))
+        assertEquals("1", humanFine(1))
+        // assertEquals("42", humanFine(42))
+        // assertEquals("2kB", humanFine(1800))
+        // assertEquals("117.7MB", humanFine(123456789))
+        // assertEquals("114.98GB", humanFine(123456789123))
+        // assertEquals("1kB", humanFine(1024))
+        // assertEquals("1.0MB", humanFine(1024.toDouble().pow(2).toLong()))
+        // assertEquals("1.00GB", humanFine(1024.toDouble().pow(3).toLong()))
+        // assertEquals("1.00TB", humanFine(1024.toDouble().pow(4).toLong()))
     }
 }
