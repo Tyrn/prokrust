@@ -64,16 +64,24 @@ class UnitTest {
     }
 
     @Test
+    fun testRoundToDecimals() {
+        assertEquals(2.0f, 1.8f.roundToDecimals(0))
+    }
+
+    @Test
     fun testHumanFine() {
         assertEquals("0", humanFine(0))
         assertEquals("1", humanFine(1))
-        // assertEquals("42", humanFine(42))
-        // assertEquals("2kB", humanFine(1800))
-        // assertEquals("117.7MB", humanFine(123456789))
-        // assertEquals("114.98GB", humanFine(123456789123))
-        // assertEquals("1kB", humanFine(1024))
-        // assertEquals("1.0MB", humanFine(1024.toDouble().pow(2).toLong()))
-        // assertEquals("1.00GB", humanFine(1024.toDouble().pow(3).toLong()))
-        // assertEquals("1.00TB", humanFine(1024.toDouble().pow(4).toLong()))
+        assertEquals("42", humanFine(42))
+        assertEquals("2kB", humanFine(1800))
+        assertEquals("117.7MB", humanFine(123456789))
+        assertEquals("114.98GB", humanFine(123456789123))
+        assertEquals("1kB", humanFine(1024))
+        assertEquals("1.0MB", humanFine(1024.toDouble().pow(2).toLong()))
+        assertEquals("1.00GB", humanFine(1024.toDouble().pow(3).toLong()))
+        assertEquals("440.3MB", humanFine(1024.toDouble().pow(3).times(.43).toLong()))
+        assertEquals("1.00TB", humanFine(1024.toDouble().pow(4).toLong()))
+        assertEquals("440.32GB", humanFine(1024.toDouble().pow(4).times(.43).toLong()))
+        assertEquals("1.00PB", humanFine(1024.toDouble().pow(5).toLong()))
     }
 }

@@ -2,6 +2,7 @@ import com.github.ajalt.clikt.core.CliktCommand
 import kotlin.math.log
 import kotlin.math.pow
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 val nobiliaryParticles = arrayOf(
     "von", "фон", "van", "ван", "der", "дер", "til", "тиль",
@@ -57,29 +58,42 @@ fun initials(authors: String): String {
         }
 }
 
+fun formatToDecimals(num: Float, precision: Int): String {
+    val parts = num.roundToDecimals(precision).toString().split(".")
+    if (parts.size != 2) return "truncD: format error, num: $num"
+    val tail = parts[1] + "000000"
+    if (precision == 0) return parts[0]
+    if (precision > 0) return parts[0] + "." + tail.slice(0..<precision)
+    return "truncD: unknown error, num: $num, precision: $precision"
+}
+
+fun Float.roundToDecimals(decimals: Int): Float {
+    var dotAt = 1
+    repeat(decimals) { dotAt *= 10 }
+    val roundedValue = (this * dotAt).roundToInt()
+    return (roundedValue / dotAt) + (roundedValue % dotAt).toFloat() / dotAt
+}
+
 fun humanFine(bytes: Long): String {
     val unitList = arrayOf(
-        Pair("", 0),
-        Pair("kB", 0),
-        Pair("MB", 1),
-        Pair("GB", 2),
-        Pair("TB", 2),
-        Pair("PB", 2),
+        { q: Float -> formatToDecimals(q, 0) },
+        { q: Float -> "${formatToDecimals(q, 0)}kB" },
+        { q: Float -> "${formatToDecimals(q, 1)}MB" },
+        { q: Float -> "${formatToDecimals(q, 2)}GB" },
+        { q: Float -> "${formatToDecimals(q, 2)}TB" },
+        { q: Float -> "${formatToDecimals(q, 2)}PB" },
     )
     if (bytes > 1) {
-        val exponent = min(log(bytes.toDouble(), 1024.toDouble()).toInt(), unitList.size - 1)
-        val quotient = bytes.toDouble() / 1024.toDouble().pow(exponent)
-        println("exponent: $exponent")
-        when (unitList[exponent]) {
-            Pair("", 0) -> return quotient.toString()
-            Pair("kB", 0) -> return quotient.toString() + "kB"
-            Pair("MB", 1) -> return quotient.toString() + "MB"
-            Pair("GB", 2) -> return quotient.toString() + "GB"
-            Pair("TB", 2) -> return quotient.toString() + "TB"
-            Pair("PB", 2) -> return quotient.toString() + "PB"
-        }
+        val exponent = min(
+            a = log(bytes.toDouble(), 1024.toDouble()).toInt(),
+            b = unitList.size - 1
+        )
+        val quotient = bytes / 1024.toDouble().pow(exponent)
+        return unitList[exponent](quotient.toFloat())
     }
-    return "0"
+    if (bytes == 0L) return "0"
+    if (bytes == 1L) return "1"
+    return "humanFine error; bytes: $bytes"
 }
 
 class Shoot : CliktCommand() {
