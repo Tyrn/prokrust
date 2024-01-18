@@ -58,15 +58,6 @@ fun initials(authors: String): String {
         }
 }
 
-fun formatToDecimals(num: Float, precision: Int): String {
-    val parts = num.roundToDecimals(precision).toString().split(".")
-    if (parts.size != 2) return "truncD: format error, num: $num"
-    val tail = parts[1] + "000000"
-    if (precision == 0) return parts[0]
-    if (precision > 0) return parts[0] + "." + tail.slice(0..<precision)
-    return "truncD: unknown error, num: $num, precision: $precision"
-}
-
 fun Float.roundToDecimals(decimals: Int): Float {
     var dotAt = 1
     repeat(decimals) { dotAt *= 10 }
@@ -75,13 +66,21 @@ fun Float.roundToDecimals(decimals: Int): Float {
 }
 
 fun humanFine(bytes: Long): String {
+    fun fmt(num: Float, precision: Int): String {
+        val parts = num.roundToDecimals(precision).toString().split(".")
+        if (parts.size != 2) return "truncD: format error, num: $num"
+        val tail = parts[1] + "0".repeat(precision)
+        if (precision == 0) return parts[0]
+        if (precision > 0) return parts[0] + "." + tail.slice(0..<precision)
+        return "truncD: unknown error, num: $num, precision: $precision"
+    }
     val unitList = arrayOf(
-        { q: Float -> formatToDecimals(q, 0) },
-        { q: Float -> "${formatToDecimals(q, 0)}kB" },
-        { q: Float -> "${formatToDecimals(q, 1)}MB" },
-        { q: Float -> "${formatToDecimals(q, 2)}GB" },
-        { q: Float -> "${formatToDecimals(q, 2)}TB" },
-        { q: Float -> "${formatToDecimals(q, 2)}PB" },
+        { q: Float -> fmt(q, 0) },
+        { q: Float -> "${fmt(q, 0)}kB" },
+        { q: Float -> "${fmt(q, 1)}MB" },
+        { q: Float -> "${fmt(q, 2)}GB" },
+        { q: Float -> "${fmt(q, 2)}TB" },
+        { q: Float -> "${fmt(q, 2)}PB" },
     )
     if (bytes > 1) {
         val exponent = min(
