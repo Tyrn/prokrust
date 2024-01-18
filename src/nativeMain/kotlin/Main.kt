@@ -66,21 +66,19 @@ fun Float.roundToDecimals(decimals: Int): Float {
 }
 
 fun humanFine(bytes: Long): String {
-    fun fmt(num: Float, precision: Int): String {
-        val parts = num.roundToDecimals(precision).toString().split(".")
-        if (parts.size != 2) return "truncD: format error, num: $num"
-        val tail = parts[1] + "0".repeat(precision)
+    fun Float.fmt(precision: Int): String {
+        val parts = this.roundToDecimals(precision).toString().split(".")
         if (precision == 0) return parts[0]
-        if (precision > 0) return parts[0] + "." + tail.slice(0..<precision)
-        return "truncD: unknown error, num: $num, precision: $precision"
+        return parts[0] + "." + (parts[1] + "0".repeat(precision)).slice(0..<precision)
     }
+
     val unitList = arrayOf(
-        { q: Float -> fmt(q, 0) },
-        { q: Float -> "${fmt(q, 0)}kB" },
-        { q: Float -> "${fmt(q, 1)}MB" },
-        { q: Float -> "${fmt(q, 2)}GB" },
-        { q: Float -> "${fmt(q, 2)}TB" },
-        { q: Float -> "${fmt(q, 2)}PB" },
+        { q: Float -> q.fmt(0) },
+        { q: Float -> "${q.fmt(0)}kB" },
+        { q: Float -> "${q.fmt(1)}MB" },
+        { q: Float -> "${q.fmt(2)}GB" },
+        { q: Float -> "${q.fmt(2)}TB" },
+        { q: Float -> "${q.fmt(2)}PB" },
     )
     if (bytes > 1) {
         val exponent = min(

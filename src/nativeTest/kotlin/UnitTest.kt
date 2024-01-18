@@ -72,6 +72,7 @@ class UnitTest {
     fun testHumanFine() {
         assertEquals("0", humanFine(0))
         assertEquals("1", humanFine(1))
+        assertEquals("2", humanFine(2))
         assertEquals("42", humanFine(42))
         assertEquals("2kB", humanFine(1800))
         assertEquals("117.7MB", humanFine(123456789))
