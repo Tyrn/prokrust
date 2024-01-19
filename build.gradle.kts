@@ -1,12 +1,11 @@
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    alias(libs.plugins.multiplatform)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotest.multiplatform)
 }
-
 repositories {
     mavenCentral()
 }
-
 kotlin {
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
@@ -34,6 +33,17 @@ kotlin {
             dependencies {
                 implementation(libs.test.common)
                 implementation(libs.test.annotations.common)
+            }
+        }
+        val commonTest by getting {
+            dependencies {
+                // implementation(libs.test.common)
+                // implementation(libs.test.annotations.common)
+                // implementation(libs.kotest.assertions.core)
+                // implementation(libs.kotest.property)
+                // implementation(libs.kotest.framework.engine)
+                // implementation(libs.kotest.framework.datatest)
+                // implementation(libs.kotest.runner.junit5)
             }
         }
     }
