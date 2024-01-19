@@ -7,6 +7,8 @@ class UnitTest {
     @Test
     fun testStrStripNumbers() {
         assertContentEquals(intArrayOf(11, 2, 144), strStripNumbers("ab11cdd2k.144"))
+        assertContentEquals(intArrayOf(847, 1, 42, 31), strStripNumbers("847.1._42_.31-knot"))
+        assertContentEquals(intArrayOf(), strStripNumbers("Ignacio Vazquez-Abrams"))
     }
     @Test
     fun testInitials() {
