@@ -32,7 +32,8 @@ kotlin {
         }
         val nativeTest by getting {
             dependencies {
-                implementation(kotlin("test-common"))
+                // implementation(kotlin("test-common"))
+                implementation(libs.test.common)
                 implementation(kotlin("test-annotations-common"))
             }
         }
