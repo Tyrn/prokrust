@@ -11,7 +11,7 @@ import kotlin.math.roundToInt
  */
 fun strStripNumbers(str: String): IntArray {
     return "\\d+".toRegex().findAll(str)
-        .map {it.value.toString().toInt()}
+        .map {it.value.toInt()}
         .toList()
         .toIntArray()
 }
