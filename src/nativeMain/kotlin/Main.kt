@@ -14,6 +14,10 @@ val nobiliaryParticles = arrayOf(
 val rDots = "[\\s.]+".toRegex()
 val rQuotedSubstrings = """"(?:\\.|[^"\\])*"""".toRegex()
 
+/**
+ * Reduces [authors] to initials.
+ * @return the string with nice initials.
+ */
 fun initials(authors: String): String {
     fun formInitial(name: String): String {
         val cut = name.split("'")
@@ -58,6 +62,11 @@ fun initials(authors: String): String {
         }
 }
 
+/**
+ * Rounds a float to [decimals].
+ * @receiver a float value to be rounded.
+ * @return the rounded value.
+ */
 fun Float.roundToDecimals(decimals: Int): Float {
     var dotAt = 1
     repeat(decimals) { dotAt *= 10 }
@@ -65,6 +74,11 @@ fun Float.roundToDecimals(decimals: Int): Float {
     return (roundedValue / dotAt) + (roundedValue % dotAt).toFloat() / dotAt
 }
 
+/**
+ * Makes a human readable string representation
+ * of [bytes], nicely rounded.
+ * @return the rounded and annotated value.
+ */
 fun humanFine(bytes: Long): String {
     fun Float.fmt(precision: Int): String {
         val parts = this.roundToDecimals(precision).toString().split(".")
