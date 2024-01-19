@@ -16,12 +16,6 @@ fun strStripNumbers(str: String): IntArray {
         .toIntArray()
 }
 
-fun strStripNum(str: String): String {
-    return "\\d+".toRegex().findAll(str)
-        .map {it.value.toString()}
-        .joinToString()
-}
-
 val nobiliaryParticles = arrayOf(
     "von", "фон", "van", "ван", "der", "дер", "til", "тиль",
     "zu", "цу", "zum", "цум", "zur", "цур", "af", "аф",
