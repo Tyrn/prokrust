@@ -4,6 +4,24 @@ import kotlin.math.pow
 import kotlin.math.min
 import kotlin.math.roundToInt
 
+/**
+ * Makes a vector of integers,
+ * embedded in the [str] argument.
+ * @return vector of integers read from left to right.
+ */
+fun strStripNumbers(str: String): IntArray {
+    return "\\d+".toRegex().findAll(str)
+        .map {it.value.toString().toInt()}
+        .toList()
+        .toIntArray()
+}
+
+fun strStripNum(str: String): String {
+    return "\\d+".toRegex().findAll(str)
+        .map {it.value.toString()}
+        .joinToString()
+}
+
 val nobiliaryParticles = arrayOf(
     "von", "фон", "van", "ван", "der", "дер", "til", "тиль",
     "zu", "цу", "zum", "цум", "zur", "цур", "af", "аф",

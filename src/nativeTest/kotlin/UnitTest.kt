@@ -1,8 +1,14 @@
 import kotlin.math.pow
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
 class UnitTest {
+    @Test
+    fun testStrStripNumbers() {
+        assertContentEquals(intArrayOf(11, 2, 144), strStripNumbers("ab11cdd2k.144"))
+        assertEquals("11, 2, 144", strStripNum("ab11cdd2k.144"))
+    }
     @Test
     fun testInitials() {
         assertEquals("A B C", rDots.replace("A. ..B..C", " "))
