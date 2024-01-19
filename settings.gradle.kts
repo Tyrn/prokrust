@@ -9,6 +9,11 @@ dependencyResolutionManagement {
                 "org.jetbrains.kotlin",
                 "kotlin-test-common"
             ).versionRef("kotlin")
+            library(
+                "test-annotations-common",
+                "org.jetbrains.kotlin",
+                "kotlin-test-annotations-common"
+            ).versionRef("kotlin")
             plugin(
                 "kotlin-multiplatform",
                 "org.jetbrains.kotlin.multiplatform"
