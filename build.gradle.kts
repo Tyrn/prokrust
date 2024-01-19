@@ -1,5 +1,6 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    kotlin("multiplatform") version "1.9.22"
+    alias(libs.plugins.kotlin.multiplatform)
 }
 
 repositories {
