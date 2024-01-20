@@ -153,8 +153,34 @@ fun humanFine(bytes: Long): String {
 }
 
 val useIcon = '\u2b50'
+val crossIcon = '\u274c'
+val whatIcon = '\u2754'
 
-class Prokrust : CliktCommand() {
+class Prokrust : CliktCommand(
+    help =
+    """
+    Prokrust a.k.a. Damastes is a CLI utility for copying directories and subdirectories
+    containing supported audio files in sequence, naturally sorted.
+    The end result is a "flattened" copy of the source subtree. "Flattened" means
+    that only a namesake of the root source directory is created, where all the files get
+    copied to, names prefixed with a serial number. Tag "Track Number"
+    is set, tags "Title", "Artist", and "Album" can be replaced optionally.
+    The writing process is strictly sequential: either starting with the number one file,
+    or in the reverse order. This can be important for some mobile devices.
+    $crossIcon Broken media;
+    $whatIcon Suspicious media;
+    $useIcon Really useful options.
+
+    Examples; <src> as a directory:
+
+    robinson-crusoe $ prokrust -va 'Daniel "Goldeneye" Defoe' -m 'Robinson Crusoe' .
+    /run/media/player
+
+    <src> as a single file:
+
+    library $ prokrust -va 'Vladimir Nabokov' -u 'Ada' ada.ogg .
+    """,
+) {
     val verbose by option(
         "-v", "--verbose", help = "${useIcon} Verbose output",
     ).flag()
