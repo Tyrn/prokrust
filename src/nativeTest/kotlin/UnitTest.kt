@@ -10,12 +10,25 @@ class UnitTest {
         assertContentEquals(intArrayOf(847, 1, 42, 31), strStripNumbers("847.1._42_.31-knot"))
         assertContentEquals(intArrayOf(), strStripNumbers("Ignacio Vazquez-Abrams"))
     }
+
     @Test
     fun testCompare() {
         assertEquals(-2, "a".compareTo("c"))
         assertEquals(-1, "a".compareTo("aa"))
         assertEquals(-1, "abc".compareTo("ac"))
     }
+
+    @Test
+    fun testSort() {
+        val toSort = arrayOf("ab", "aa")
+        // toSort.sort()
+        toSort.sortWith { a, b -> a.compareTo(b) }
+        assertContentEquals(arrayOf("aa", "ab"), toSort)
+        val toSortInt = arrayOf(2, 1)
+        toSortInt.sortWith { a, b -> a.compareTo(b) }
+        assertContentEquals(arrayOf(1, 2), toSortInt)
+    }
+
     @Test
     fun testInitials() {
         assertEquals("A B C", rDots.replace("A. ..B..C", " "))
