@@ -145,10 +145,10 @@ fun humanFine(bytes: Long): String {
     return "humanFine error; bytes: $bytes"
 }
 
-class Shoot : CliktCommand() {
+class Prokrust : CliktCommand() {
     override fun run() {
         echo("¡Hola, Kitty!")
     }
 }
 
-fun main(args: Array<String>) = Shoot().main(args)
+fun main(args: Array<String>) = Prokrust().main(args)
