@@ -11,13 +11,19 @@ import kotlin.math.roundToInt
  */
 fun strStripNumbers(str: String): IntArray {
     return "\\d+".toRegex().findAll(str)
-        .map {it.value.toInt()}
+        .map { it.value.toInt() }
         .toList()
         .toIntArray()
 }
 
-fun IntArray.compareTo(b: IntArray): Int {
-    return 0
+/**
+ * Compares [this] to [other] integer arrays using "string semantics".
+ * @return lt | eq | gt.
+ */
+inline fun IntArray.compareTo(other: IntArray): Int {
+    val comparisonResults = this.zip(other) { x, y -> x.compareTo(y) }
+    val firstNonZeroResult = comparisonResults.firstOrNull { it != 0 }
+    return firstNonZeroResult ?: (this.size - other.size)
 }
 
 val nobiliaryParticles = arrayOf(

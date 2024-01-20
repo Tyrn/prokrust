@@ -16,7 +16,15 @@ class UnitTest {
         assertEquals(-2, "a".compareTo("c"))
         assertEquals(-1, "a".compareTo("aa"))
         assertEquals(-1, "abc".compareTo("ac"))
-        assertEquals(true, intArrayOf(1, 2).compareTo(intArrayOf(2, 1)) == 0)
+
+        assertEquals(true, intArrayOf().compareTo(intArrayOf()) == 0)
+        assertEquals(true, intArrayOf(1).compareTo(intArrayOf()) > 0)
+        assertEquals(true, intArrayOf(3).compareTo(intArrayOf()) > 0)
+        assertEquals(true, intArrayOf(1, 2).compareTo(intArrayOf(1, 2, 0)) < 0)
+        assertEquals(true, intArrayOf(2, 8).compareTo(intArrayOf(2, 2, 8)) > 0)
+        assertEquals(true, intArrayOf(0, 2, 4).compareTo(intArrayOf(0, 9)) < 0)
+        assertEquals(true, intArrayOf(0, 9).compareTo(intArrayOf(0, 2, 2)) > 0)
+        assertEquals(true, intArrayOf(11, 2).compareTo(intArrayOf(11, 2)) == 0)
     }
 
     @Test
