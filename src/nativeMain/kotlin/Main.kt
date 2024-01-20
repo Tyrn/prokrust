@@ -1,4 +1,5 @@
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.optionalValue
@@ -232,6 +233,8 @@ class Prokrust : CliktCommand() {
         "--album-num",
         help = "0..99; prepend <int> to the destination root directory name",
     ).int()
+    val src by argument()
+    val dst by argument()
 
     override fun run() {
         appMain()
