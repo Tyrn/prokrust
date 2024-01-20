@@ -1,6 +1,7 @@
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.default
+import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.optionalValue
 import com.github.ajalt.clikt.parameters.types.boolean
@@ -156,58 +157,57 @@ val useIcon = '\u2b50'
 class Prokrust : CliktCommand() {
     val verbose by option(
         "-v", "--verbose", help = "${useIcon} Verbose output",
-    ).boolean().optionalValue(true).default(false)
+    ).flag()
     val dropTracknumber by option(
         "-d",
         "--drop-tracknumber",
         help = "Do not set track numbers",
-    ).boolean().optionalValue(true).default(false)
+    ).flag()
     val stripDecorations by option(
         "-s",
         "--strip-decorations",
         help = "Strip file and directory name decorations",
-    ).boolean().optionalValue(true).default(false)
+    ).flag()
     val fileTitle by option(
         "-f", "--file-title", help = "Use file name for title tag",
-    ).boolean().optionalValue(true).default(false)
+    ).flag()
     val fileTitleNum by option(
         "-F",
         "--file-title-num",
         help = "Use numbered file name for title tag",
-    ).boolean().optionalValue(true).default(false)
+    ).flag()
     val sortLex by option(
         "-x", "--sort-lex", help = "Sort files lexicographically",
-    ).boolean().optionalValue(true).default(false)
+    ).flag()
     val treeDst by option(
         "-t",
         "--tree-dst",
         help = "Retain the tree structure of the source album at destination",
-    ).boolean().optionalValue(true).default(false)
+    ).flag()
     val dropDst by option(
         "-p", "--drop-dst", help = "Do not create destination directory",
-    ).boolean().optionalValue(true).default(false)
+    ).flag()
     val reverse by option(
         "-r",
         "--reverse",
         help = "Copy files in reverse order (number one file is the last to be copied)",
-    ).boolean().optionalValue(true).default(false)
+    ).flag()
     val overwrite by option(
         "-w",
         "--overwrite",
         help = "Silently remove existing destination directory (not recommended)",
-    ).boolean().optionalValue(true).default(false)
+    ).flag()
     val dryRun by option(
         "-y",
         "--dry-run",
         help = "Without actually modifying anything (trumps -w, too)",
-    ).boolean().optionalValue(true).default(false)
-    val count by option("-c", "--count", help = "Just count the files").boolean()
-        .optionalValue(true).default(false)
+    ).flag()
+    val count by option("-c", "--count", help = "Just count the files").flag()
     val prependSubdirName by option(
         "-i",
         "--prepend-subdir-name",
         help = "Prepend current subdirectory name to a file name",
-    ).boolean().optionalValue(true).default(false)
+    ).flag()
     val fileType by option(
         "-e",
         "--file-type",
