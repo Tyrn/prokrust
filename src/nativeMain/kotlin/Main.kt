@@ -1,4 +1,9 @@
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.parameters.options.default
+import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.clikt.parameters.options.optionalValue
+import com.github.ajalt.clikt.parameters.types.boolean
+import com.github.ajalt.clikt.parameters.types.int
 import kotlin.math.log
 import kotlin.math.pow
 import kotlin.math.min
@@ -6,7 +11,7 @@ import kotlin.math.roundToInt
 
 /**
  * Makes a vector of integers,
- * embedded in the [str] argument.
+ * embedded in [this] argument.
  * @return vector of integers read from left to right.
  */
 inline fun String.stripNumbers(): IntArray {
@@ -145,10 +150,100 @@ fun humanFine(bytes: Long): String {
     return "humanFine error; bytes: $bytes"
 }
 
+val useIcon = '\u2b50'
+
 class Prokrust : CliktCommand() {
+    val verbose by option(
+        "-v", "--verbose", help = "${useIcon} Verbose output",
+    ).boolean().optionalValue(true).default(false)
+    val dropTracknumber by option(
+        "-d",
+        "--drop-tracknumber",
+        help = "Do not set track numbers."
+    ).boolean().optionalValue(true).default(false)
+    val stripDecorations by option(
+        "-s",
+        "--strip-decorations",
+        help = "Strip file and directory name decorations."
+    ).boolean().optionalValue(true).default(false)
+    val fileTitle by option(
+        "-f", "--file-title", help = "Use file name for title tag."
+    ).boolean().optionalValue(true).default(false)
+    val fileTitleNum by option(
+        "-F",
+        "--file-title-num",
+        help = "Use numbered file name for title tag.",
+    ).boolean().optionalValue(true).default(false)
+    val sortLex by option(
+        "-x", "--sort-lex", help = "Sort files lexicographically."
+    ).boolean().optionalValue(true).default(false)
+    val treeDst by option(
+        "-t",
+        "--tree-dst",
+        help = "Retain the tree structure of the source album at destination.",
+    ).boolean().optionalValue(true).default(false)
+    val dropDst by option(
+        "-p", "--drop-dst", help = "Do not create destination directory."
+    ).boolean().optionalValue(true).default(false)
+    val reverse by option(
+        "-r",
+        "--reverse",
+        help = "Copy files in reverse order (number one file is the last to be copied).",
+    ).boolean().optionalValue(true).default(false)
+    val overwrite by option(
+        "-w",
+        "--overwrite",
+        help = "Silently remove existing destination directory (not recommended)",
+    ).boolean().optionalValue(true).default(false)
+    val dryRun by option(
+        "-y",
+        "--dry-run",
+        help = "Without actually modifying anything (trumps -w, too)",
+    ).boolean().optionalValue(true).default(false)
+    val count by option("-c", "--count", help = "Just count the files.").boolean()
+        .optionalValue(true).default(false)
+    val prependSubdirName by option(
+        "-i",
+        "--prepend-subdir-name",
+        help = "Prepend current subdirectory name to a file name.",
+    ).boolean().optionalValue(true).default(false)
+    val fileType by option(
+        "-e",
+        "--file-type",
+        help = "Accept only specified audio files (e.g. -e flac, or even -e '*64kb.mp3')",
+    )
+    val unifiedName by option(
+        "-u",
+        "--unified-name",
+        help = "${useIcon}Destination directory name and file names are based on <text>, file"
+                + " extensions retained; also album tag, if the latter is not specified explicitly.",
+    )
+    val artist by option(
+        "-a",
+        "--artist",
+        help = "${useIcon}Artist tag",
+    )
+    val album by option(
+        "-m",
+        "--album",
+        help = "${useIcon}Album tag",
+    )
+    val albumNum by option(
+        "-b",
+        "--album-num",
+        help = "0..99; prepend INTEGER to the destination root directory name.",
+    ).int()
+
     override fun run() {
-        echo("¡Hola, Kitty!")
+        appMain()
     }
 }
 
-fun main(args: Array<String>) = Prokrust().main(args)
+fun appMain() {
+    opt.echo("¡Hola, Kitty!")
+    opt.echo("Check verbose: ${opt.verbose}")
+}
+
+val opt = Prokrust()
+
+fun main(args: Array<String>) = opt.main(args)
