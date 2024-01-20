@@ -21,9 +21,10 @@ inline fun String.stripNumbers(): IntArray {
  * @return lt | eq | gt.
  */
 inline fun IntArray.compareTo(other: IntArray): Int {
-    val comparisonResults = this.zip(other) { x, y -> x.compareTo(y) }
-    val firstNonZeroResult = comparisonResults.firstOrNull { it != 0 }
-    return firstNonZeroResult ?: (this.size - other.size)
+    return this
+        .zip(other) { x, y -> x.compareTo(y) }
+        .firstOrNull { it != 0 }
+        ?: (this.size - other.size)
 }
 
 /**
