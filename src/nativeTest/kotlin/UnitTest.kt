@@ -11,6 +11,12 @@ class UnitTest {
         assertContentEquals(intArrayOf(), strStripNumbers("Ignacio Vazquez-Abrams"))
     }
     @Test
+    fun testCompare() {
+        assertEquals(-2, "a".compareTo("c"))
+        assertEquals(-1, "a".compareTo("aa"))
+        assertEquals(-1, "abc".compareTo("ac"))
+    }
+    @Test
     fun testInitials() {
         assertEquals("A B C", rDots.replace("A. ..B..C", " "))
         assertEquals("A B C", rQuotedSubstrings.replace("A\"Dobby\"B\"Bobby\"C", " "))
