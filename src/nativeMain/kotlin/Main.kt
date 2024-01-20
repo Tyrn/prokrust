@@ -9,8 +9,8 @@ import kotlin.math.roundToInt
  * embedded in the [str] argument.
  * @return vector of integers read from left to right.
  */
-fun strStripNumbers(str: String): IntArray {
-    return "\\d+".toRegex().findAll(str)
+inline fun String.stripNumbers(): IntArray {
+    return "\\d+".toRegex().findAll(this)
         .map { it.value.toInt() }
         .toList()
         .toIntArray()
@@ -24,6 +24,14 @@ inline fun IntArray.compareTo(other: IntArray): Int {
     val comparisonResults = this.zip(other) { x, y -> x.compareTo(y) }
     val firstNonZeroResult = comparisonResults.firstOrNull { it != 0 }
     return firstNonZeroResult ?: (this.size - other.size)
+}
+
+inline fun String.compareToNaturally(other: String): Int {
+    val nx = this.stripNumbers()
+    val ny = other.stripNumbers()
+
+    return if (nx.isNotEmpty() && ny.isNotEmpty()) nx.compareTo(ny)
+    else this.compareTo(other)
 }
 
 val nobiliaryParticles = arrayOf(

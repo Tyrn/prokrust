@@ -6,9 +6,9 @@ import kotlin.test.assertEquals
 class UnitTest {
     @Test
     fun testStrStripNumbers() {
-        assertContentEquals(intArrayOf(11, 2, 144), strStripNumbers("ab11cdd2k.144"))
-        assertContentEquals(intArrayOf(847, 1, 42, 31), strStripNumbers("847.1._42_.31-knot"))
-        assertContentEquals(intArrayOf(), strStripNumbers("Ignacio Vazquez-Abrams"))
+        assertContentEquals(intArrayOf(11, 2, 144), "ab11cdd2k.144".stripNumbers())
+        assertContentEquals(intArrayOf(847, 1, 42, 31), "847.1._42_.31-knot".stripNumbers())
+        assertContentEquals(intArrayOf(), "Ignacio Vazquez-Abrams".stripNumbers())
     }
 
     @Test
@@ -25,6 +25,10 @@ class UnitTest {
         assertEquals(true, intArrayOf(0, 2, 4).compareTo(intArrayOf(0, 9)) < 0)
         assertEquals(true, intArrayOf(0, 9).compareTo(intArrayOf(0, 2, 2)) > 0)
         assertEquals(true, intArrayOf(11, 2).compareTo(intArrayOf(11, 2)) == 0)
+
+        assertEquals(true, "".compareToNaturally("") == 0)
+        assertEquals(true, "2a".compareToNaturally("10a") < 0)
+        assertEquals(true, "alfa".compareToNaturally("bravo") < 0)
     }
 
     @Test
