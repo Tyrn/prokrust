@@ -16,6 +16,7 @@ class UnitTest {
         assertEquals(-2, "a".compareTo("c"))
         assertEquals(-1, "a".compareTo("aa"))
         assertEquals(-1, "abc".compareTo("ac"))
+        assertEquals(true, intArrayOf(1, 2).compareTo(intArrayOf(2, 1)) == 0)
     }
 
     @Test

@@ -16,6 +16,10 @@ fun strStripNumbers(str: String): IntArray {
         .toIntArray()
 }
 
+fun IntArray.compareTo(b: IntArray): Int {
+    return 0
+}
+
 val nobiliaryParticles = arrayOf(
     "von", "фон", "van", "ван", "der", "дер", "til", "тиль",
     "zu", "цу", "zum", "цум", "zur", "цур", "af", "аф",
