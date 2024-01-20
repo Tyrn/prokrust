@@ -26,6 +26,13 @@ inline fun IntArray.compareTo(other: IntArray): Int {
     return firstNonZeroResult ?: (this.size - other.size)
 }
 
+/**
+ * If both [this] and [other] contain digits, returns numerical comparison based on the numeric
+ * values embedded in the strings, otherwise returns the standard string comparison.
+ * The idea of the natural sort as opposed to the standard lexicographic sort is one of coping
+ * with the possible absence of the leading zeros in 'numbers' of files or directories.
+ * @return lt | eq | gt
+ */
 inline fun String.compareToNaturally(other: String): Int {
     val nx = this.stripNumbers()
     val ny = other.stripNumbers()
