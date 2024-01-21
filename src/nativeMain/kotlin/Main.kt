@@ -1,5 +1,6 @@
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
+import com.github.ajalt.clikt.parameters.arguments.validate
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
@@ -259,8 +260,8 @@ class Prokrust : CliktCommand(
         "--album-num",
         help = "0..99; prepend <int> to the destination root directory name",
     ).int()
-    val src by argument()
-    val dst by argument()
+    val src by argument("src").validate { require(it.isNotBlank()) { "Source file cannot be blank." } }
+    val dst by argument("dst").validate { require(it.isNotBlank()) { "Destination cannot be blank." } }
 
     override fun run() {
         appMain()
