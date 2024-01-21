@@ -29,23 +29,9 @@ inline fun Sequence<Int>.compareTo(other: Sequence<Int>): Int {
     return this
         .zip(other) { x, y -> x.compareTo(y) }
         .firstOrNull { it != 0 }
-        ?:
-        if (!this.iterator().hasNext()) {
+        ?: if (!this.iterator().hasNext())
             if (!other.iterator().hasNext()) 0 else -1
-        } else {
-            1
-        }
-}
-
-/**
- * Compares [this] to [other] integer arrays using "string semantics".
- * @return lt | eq | gt.
- */
-inline fun IntArray.compareTo(other: IntArray): Int {
-    return this
-        .zip(other) { x, y -> x.compareTo(y) }
-        .firstOrNull { it != 0 }
-        ?: (this.size - other.size)
+        else 1
 }
 
 /**

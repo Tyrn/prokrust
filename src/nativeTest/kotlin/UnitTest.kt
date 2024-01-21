@@ -38,10 +38,6 @@ class UnitTest {
         val unsortedInts = arrayOf(2, 1)
         unsortedInts.sortWith { a, b -> a.compareTo(b) }
         assertContentEquals(arrayOf(1, 2), unsortedInts)
-
-        val unsortedIntArrays = arrayOf(intArrayOf(1, 1, 1), intArrayOf(2, 1))
-        unsortedIntArrays.sortWith { a, b -> a.compareTo(b) }
-        // Assertion is counterproductive, but one can introspect compareTo().
     }
 
     @Test
