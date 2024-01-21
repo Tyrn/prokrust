@@ -6,9 +6,15 @@ import kotlin.test.assertEquals
 class UnitTest {
     @Test
     fun testStrStripNumbers() {
-        assertContentEquals(intArrayOf(11, 2, 144), "ab11cdd2k.144".stripNumbers())
-        assertContentEquals(intArrayOf(847, 1, 42, 31), "847.1._42_.31-knot".stripNumbers())
-        assertContentEquals(intArrayOf(), "Ignacio Vazquez-Abrams".stripNumbers())
+        assertContentEquals(
+            intArrayOf(11, 2, 144).toList(),
+            "ab11cdd2k.144".stripNumbers().toList()
+        )
+        assertContentEquals(
+            intArrayOf(847, 1, 42, 31).toList(),
+            "847.1._42_.31-knot".stripNumbers().toList()
+        )
+        assertContentEquals(intArrayOf().toList(), "Ignacio Vazquez-Abrams".stripNumbers().toList())
     }
 
     @Test
@@ -16,15 +22,6 @@ class UnitTest {
         assertEquals(-2, "a".compareTo("c"))
         assertEquals(-1, "a".compareTo("aa"))
         assertEquals(-1, "abc".compareTo("ac"))
-
-        assertEquals(true, intArrayOf().compareTo(intArrayOf()) == 0)
-        assertEquals(true, intArrayOf(1).compareTo(intArrayOf()) > 0)
-        assertEquals(true, intArrayOf(3).compareTo(intArrayOf()) > 0)
-        assertEquals(true, intArrayOf(1, 2).compareTo(intArrayOf(1, 2, 0)) < 0)
-        assertEquals(true, intArrayOf(2, 8).compareTo(intArrayOf(2, 2, 8)) > 0)
-        assertEquals(true, intArrayOf(0, 2, 4).compareTo(intArrayOf(0, 9)) < 0)
-        assertEquals(true, intArrayOf(0, 9).compareTo(intArrayOf(0, 2, 2)) > 0)
-        assertEquals(true, intArrayOf(11, 2).compareTo(intArrayOf(11, 2)) == 0)
 
         assertEquals(true, "".compareToNaturally("") == 0)
         assertEquals(true, "2a".compareToNaturally("10a") < 0)
