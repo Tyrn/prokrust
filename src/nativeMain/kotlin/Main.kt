@@ -112,7 +112,7 @@ fun initials(authors: String): String {
  * @receiver a float value to be rounded.
  * @return the rounded value.
  */
-fun Float.roundToDecimals(decimals: Int): Float {
+inline fun Float.roundToDecimals(decimals: Int): Float {
     var dotAt = 1
     repeat(decimals) { dotAt *= 10 }
     val roundedValue = (this * dotAt).roundToInt()

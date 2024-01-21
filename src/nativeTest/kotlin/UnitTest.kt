@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 
 class UnitTest {
     @Test
-    fun testStrStripNumbers() {
+    fun testStringStripNumbers() {
         assertContentEquals(
             intArrayOf(11, 2, 144).toList(),
             "ab11cdd2k.144".stripNumbers().toList()
@@ -24,7 +24,9 @@ class UnitTest {
         assertEquals(-1, "abc".compareTo("ac"))
 
         assertEquals(true, "".compareToNaturally("") == 0)
+        assertEquals(true, "".compareToNaturally("a") < 0)
         assertEquals(true, "2a".compareToNaturally("10a") < 0)
+        assertEquals(true, "10a".compareTo("2a") < 0)
         assertEquals(true, "alfa".compareToNaturally("bravo") < 0)
     }
 
@@ -42,6 +44,9 @@ class UnitTest {
 
     @Test
     fun testInitials() {
+        // There are four delimiters: comma, hyphen, dot, and space.
+        // initials() syntax philosophy: if a delimiter is
+        // misplaced, it's ignored.
         assertEquals("A B C", rDots.replace("A. ..B..C", " "))
         assertEquals("A B C", rQuotedSubstrings.replace("A\"Dobby\"B\"Bobby\"C", " "))
         assertEquals("", initials(""))
