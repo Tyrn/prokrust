@@ -8,4 +8,6 @@
 
 - [Kotlin Native POSIX directory iteration](https://discuss.kotlinlang.org/t/kotlin-native-posix-directory-iteration/10075)
 
-- GraalVM [1](https://github.com/trietsch/spotify-cli), [2](https://habr.com/ru/articles/760074/)
+- GraalVM [1](https://www.graalvm.org/22.0/examples/java-kotlin-aot/),
+[2](https://github.com/trietsch/spotify-cli),
+[3](https://habr.com/ru/articles/760074/)
