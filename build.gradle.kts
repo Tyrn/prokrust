@@ -35,16 +35,5 @@ kotlin {
                 implementation(libs.test.annotations.common)
             }
         }
-        val commonTest by getting {
-            dependencies {
-                // implementation(libs.test.common)
-                // implementation(libs.test.annotations.common)
-                // implementation(libs.kotest.assertions.core)
-                // implementation(libs.kotest.property)
-                // implementation(libs.kotest.framework.engine)
-                // implementation(libs.kotest.framework.datatest)
-                // implementation(libs.kotest.runner.junit5)
-            }
-        }
     }
 }
