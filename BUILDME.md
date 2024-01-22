@@ -4,3 +4,6 @@
 
 - [Getting Started With Kotlin/Native](https://www.baeldung.com/kotlin/native)
 
+- [fcopy()](https://stackoverflow.com/questions/17666316/is-there-a-posix-function-to-copy-a-file)
+
+- [Kotlin Native POSIX directory iteration](https://discuss.kotlinlang.org/t/kotlin-native-posix-directory-iteration/10075)

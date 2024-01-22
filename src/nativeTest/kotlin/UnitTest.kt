@@ -8,13 +8,15 @@ class UnitTest {
     fun testStringStripNumbers() {
         assertContentEquals(
             intArrayOf(11, 2, 144).toList(),
-            "ab11cdd2k.144".stripNumbers().toList()
+            "ab11cdd2k.144".stripNumbersLazy().toList()
         )
+        assertContentEquals(intArrayOf(11, 2, 144), "ab11cdd2k.144".stripNumbers())
+        assertContentEquals(intArrayOf(847, 1, 42, 31), "847.1._42_.31-knot".stripNumbers())
         assertContentEquals(
-            intArrayOf(847, 1, 42, 31).toList(),
-            "847.1._42_.31-knot".stripNumbers().toList()
+            intArrayOf().toList(),
+            "Ignacio Vazquez-Abrams".stripNumbersLazy().toList()
         )
-        assertContentEquals(intArrayOf().toList(), "Ignacio Vazquez-Abrams".stripNumbers().toList())
+        assertContentEquals(intArrayOf(), "Ignacio Vazquez-Abrams".stripNumbers())
     }
 
     @Test

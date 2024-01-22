@@ -13,17 +13,18 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 
 /**
- * Makes a vector of integers,
+ * Makes a sequence of integers,
  * embedded in [this] argument.
- * @return vector of integers read from left to right.
+ * @return sequence of integers to be read from left to right.
  */
-inline fun String.stripNumbers(): Sequence<Int> {
+inline fun String.stripNumbersLazy(): Sequence<Int> {
     return "\\d+".toRegex().findAll(this)
         .map { it.value.toInt() }
 }
 
 /**
- * Compares [this] to [other] integer sequences using "string semantics".
+ * Compares [this] to [other] integer sequences using "string semantics",
+ * consumes the sequences.
  * @return lt | eq | gt.
  */
 inline fun Sequence<Int>.compareTo(other: Sequence<Int>): Int {
@@ -33,6 +34,29 @@ inline fun Sequence<Int>.compareTo(other: Sequence<Int>): Int {
         ?: if (!this.iterator().hasNext())
             if (!other.iterator().hasNext()) 0 else -1
         else 1
+}
+
+/**
+ * Makes a vector of integers,
+ * embedded in [this] argument.
+ * @return vector of integers read from left to right.
+ */
+inline fun String.stripNumbers(): IntArray {
+    return "\\d+".toRegex().findAll(this)
+        .map { it.value.toInt() }
+        .toList()
+        .toIntArray()
+}
+
+/**
+ * Compares [this] to [other] integer arrays using "string semantics".
+ * @return lt | eq | gt.
+ */
+inline fun IntArray.compareTo(other: IntArray): Int {
+    return this
+        .zip(other) { x, y -> x.compareTo(y) }
+        .firstOrNull { it != 0 }
+        ?: (this.size - other.size)
 }
 
 /**
@@ -46,7 +70,7 @@ inline fun String.compareToNaturally(other: String): Int {
     val nx = this.stripNumbers()
     val ny = other.stripNumbers()
 
-    return if (nx.iterator().hasNext() && ny.iterator().hasNext()) nx.compareTo(ny)
+    return if (nx.isNotEmpty() && ny.isNotEmpty()) nx.compareTo(ny)
     else this.compareTo(other)
 }
 
