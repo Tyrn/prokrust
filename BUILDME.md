@@ -10,4 +10,5 @@
 
 - GraalVM [1](https://www.graalvm.org/22.0/examples/java-kotlin-aot/),
 [2](https://github.com/trietsch/spotify-cli),
-[3](https://habr.com/ru/articles/760074/)
+[3](https://habr.com/ru/articles/760074/),
+[Gradle plugin](https://graalvm.github.io/native-build-tools/latest/gradle-plugin.html)
