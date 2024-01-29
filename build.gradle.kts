@@ -27,6 +27,7 @@ kotlin {
         val nativeMain by getting {
             dependencies {
                 implementation(libs.clikt.clikt)
+                implementation(libs.okio.okio)
             }
         }
         val nativeTest by getting {

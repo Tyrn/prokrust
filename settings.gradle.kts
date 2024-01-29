@@ -3,6 +3,7 @@ dependencyResolutionManagement {
         create("libs") {
             version("clikt", "4.2.2")
             version("kotlin", "1.9.22")
+            version("okio", "3.7.0")
             version("kotest", "5.7.2")
             plugin(
                 "kotlin-multiplatform",
@@ -23,6 +24,11 @@ dependencyResolutionManagement {
                 "org.jetbrains.kotlin",
                 "kotlin-test-annotations-common"
             ).versionRef("kotlin")
+            library(
+                "okio-okio",
+                "com.squareup.okio",
+                "okio"
+            ).versionRef("okio")
             // library(
             //     "kotest-",
             //     "io.kotest",
