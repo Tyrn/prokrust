@@ -172,7 +172,7 @@ fun humanFine(bytes: Long): String {
     }
     if (bytes == 0L) return "0"
     if (bytes == 1L) return "1"
-    return "humanFine error; bytes: $bytes"
+    throw RuntimeException("humanFine error; bytes: $bytes")
 }
 
 val useIcon = '\u2b50'
