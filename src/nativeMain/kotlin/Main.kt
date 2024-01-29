@@ -9,6 +9,7 @@ import com.github.ajalt.clikt.parameters.types.boolean
 import com.github.ajalt.clikt.parameters.types.int
 import okio.FileSystem
 import okio.Path.Companion.toPath
+import okio.buffer
 import okio.use
 import kotlin.math.log
 import kotlin.math.pow
@@ -301,8 +302,8 @@ fun appMain() {
     val srcPath = opt.src.toPath()
     val dstPath = opt.dst.toPath()
     FileSystem.SYSTEM.source(srcPath).use { source ->
-        FileSystem.SYSTEM.sink(dstPath).use { sink ->
-            source to sink
+        FileSystem.SYSTEM.sink(dstPath).buffer().use { sink ->
+            sink.writeAll(source)
         }
     }
 }
