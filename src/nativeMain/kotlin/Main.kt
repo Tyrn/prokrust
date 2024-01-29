@@ -7,10 +7,7 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.optionalValue
 import com.github.ajalt.clikt.parameters.types.boolean
 import com.github.ajalt.clikt.parameters.types.int
-import okio.FileSystem
 import okio.Path.Companion.toPath
-import okio.buffer
-import okio.use
 import kotlin.math.log
 import kotlin.math.pow
 import kotlin.math.min
@@ -299,13 +296,10 @@ class Prokrust : CliktCommand(
 fun appMain() {
     opt.echo("¡Hola, Kitty!")
     opt.echo("Check verbose: ${opt.verbose}")
-    val srcPath = opt.src.toPath()
-    val dstPath = opt.dst.toPath()
-    FileSystem.SYSTEM.source(srcPath).use { source ->
-        FileSystem.SYSTEM.sink(dstPath).buffer().use { sink ->
-            sink.writeAll(source)
-        }
-    }
+
+    val lst = listFilesAndDirsPosix(".")
+    println("lst = $lst")
+    fileCopy(opt.src.toPath(), opt.dst.toPath())
 }
 
 val opt = Prokrust()
