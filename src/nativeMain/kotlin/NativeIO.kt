@@ -16,6 +16,10 @@ import okio.use
 import platform.posix.S_IFDIR
 import platform.posix.S_IFREG
 import platform.posix.stat
+import kotlin.experimental.ExperimentalNativeApi
+
+@OptIn(ExperimentalNativeApi::class)
+val fileSeparator = if (Platform.osFamily == OsFamily.WINDOWS) "\\" else "/"
 
 @OptIn(ExperimentalForeignApi::class)
 fun dirsAndFilesListPosix(parentDir: String): List<String> {
@@ -24,7 +28,10 @@ fun dirsAndFilesListPosix(parentDir: String): List<String> {
     memScoped {
         var ep: CPointer<dirent>? = readdir(dp)
         while (ep != null) {
-            entries.add(ep.pointed.d_name.toKString())
+            val name = ep.pointed.d_name.toKString()
+            if (name != "." && name != "..") {
+                entries.add(name)
+            }
             ep = readdir(dp)
         }
     }
@@ -42,7 +49,7 @@ fun dirsAndFilesPairPosix(parentDir: String): Pair<List<String>, List<String>> {
         while (ep != null) {
             val name = ep.pointed.d_name.toKString()
             if (name != "." && name != "..") {
-                val path = "$parentDir/$name"
+                val path = "$parentDir$fileSeparator$name"
                 val statBuf = alloc<stat>()
                 if (stat(path, statBuf.ptr) == 0) {
                     if (statBuf.st_mode.toInt() and S_IFDIR != 0) {
