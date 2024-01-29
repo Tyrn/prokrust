@@ -1,11 +1,8 @@
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.validate
-import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
-import com.github.ajalt.clikt.parameters.options.optionalValue
-import com.github.ajalt.clikt.parameters.types.boolean
 import com.github.ajalt.clikt.parameters.types.int
 import okio.Path.Companion.toPath
 import kotlin.math.log
@@ -297,8 +294,10 @@ fun appMain() {
     opt.echo("¡Hola, Kitty!")
     opt.echo("Check verbose: ${opt.verbose}")
 
-    val lst = listFilesAndDirsPosix(".")
+    val lst = dirsAndFilesListPosix(".")
     println("lst = $lst")
+    val (dirs, files) = dirsAndFilesPairPosix(".")
+    println("dirs = $dirs, files = $files")
     fileCopy(opt.src.toPath(), opt.dst.toPath())
 }
 
