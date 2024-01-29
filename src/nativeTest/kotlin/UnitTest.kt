@@ -1,7 +1,10 @@
+import okio.Path.Companion.toPath
 import kotlin.math.pow
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class UnitTest {
     @Test
@@ -128,5 +131,81 @@ class UnitTest {
         assertEquals("1.00TB", humanFine(1024.toDouble().pow(4).toLong()))
         assertEquals("440.32GB", humanFine(1024.toDouble().pow(4).times(.43).toLong()))
         assertEquals("1.00PB", humanFine(1024.toDouble().pow(5).toLong()))
+    }
+
+    @Test
+    fun testStartsWith() {
+        listOf(
+            "/a/b/c/d" to "/a/b/c",
+            "/a/b/c/d" to "/a/b/c/",
+            "/A/B/C/D" to "/A/B/C",
+            "/a/b/c/d" to "/a/b//c/",
+            "/a/b/c/d" to "/a/b/../b/c",
+            "/a/b/c/d" to "/a/../a/./b/../b///c",
+            "\\a\\b\\c\\d" to "/a/../a/./b/../b///c",
+            "/home/user/.config/test" to "/home/user",
+            "/var/www/html/app" to "/var/www/html",
+            "/home/user" to "/",
+            "/" to "/",
+            "////////////////////////" to "/",
+            "/" to "////////////////////////",
+            "/home/user" to "/home/user",
+            "/home/user/./" to "/home/user",
+            "/home/user" to "/home/user/./",
+            "/./var" to "/var",
+            "." to ".",
+            "./" to ".",
+            ".." to "..",
+            "../.." to "../..",
+            "./.." to "../.",
+            "../." to "./..",
+            "./../." to ".././.",
+            "/." to "/.",
+            "./" to ".",
+            "/a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z" to "/a/b/c",
+            "/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a" to "/a/a/a"
+        ).forEach { (pathString, otherPathString) ->
+            assertTrue(
+                pathString.toPath().startsWith(otherPathString.toPath()),
+                "$pathString should start with $otherPathString"
+            )
+        }
+
+        listOf(
+            "/a/b/c" to "/a/b/c/d/",
+            "/a/b/c/" to "/a/b/c/d",
+            "/a/b/d/d" to "/a/b/c",
+            "/a/b/d/d" to "/a/b/ce",
+            "/a/b/ce" to "/a/b/c",
+            "/a/b/c" to "/a/b/ce",
+            "/abcd" to "/a/b/c/d",
+            "/a/../b/c" to "/a/b/c",
+            "/a/b/" to "/a/b//c",
+            "/a/b/c/d" to "/a/b/../c",
+            "/a/b/c/d" to "/a/./a/../b/./b///c",
+            "/a/b/c" to "/c/b/a",
+            "/a/a/a/a" to "/a/a/a/a/a",
+            "\\a\\b\\d\\d" to "\\a\\b\\c",
+            "\\a\\b\\d\\d" to "/a/b/c",
+            "/home/user/.config/test" to "/home/user2",
+            "/var/www/html/app" to "/var/local/www/html/app",
+            "/home/user" to ".",
+            "/" to "./",
+            "/home/user" to "/home/user2",
+            "/home/user/./" to "/home/user2",
+            "/home/user2" to "/home/user/./",
+            "../var" to "/var",
+            "." to "..",
+            "./" to "..",
+            ".." to ".",
+            "/a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z" to "/a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/z",
+            "/a/a/a" to "/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a",
+            "/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a/a" to "/A",
+        ).forEach { (pathString, otherPathString) ->
+            assertFalse(
+                pathString.toPath().startsWith(otherPathString.toPath()),
+                "$pathString should not start with $otherPathString"
+            )
+        }
     }
 }

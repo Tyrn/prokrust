@@ -31,6 +31,7 @@ fun dirsAndFilesListPosix(parentDir: String): List<String> {
     closedir(dp)
     return entries
 }
+
 @OptIn(ExperimentalForeignApi::class)
 fun dirsAndFilesPairPosix(parentDir: String): Pair<List<String>, List<String>> {
     val dp = opendir(parentDir) ?: throw RuntimeException("Couldn't open directory $parentDir")
@@ -57,10 +58,21 @@ fun dirsAndFilesPairPosix(parentDir: String): Pair<List<String>, List<String>> {
     closedir(dp)
     return Pair(dirs, files)
 }
+
 fun fileCopy(src: Path, dstDir: Path) {
     FileSystem.SYSTEM.source(src).use { source ->
         FileSystem.SYSTEM.sink(dstDir).buffer().use { sink ->
             sink.writeAll(source)
         }
+    }
+}
+
+fun Path.startsWith(other: Path) = normalized().run {
+    other.normalized().let { normalizedOther ->
+        normalizedOther.segments.size <= segments.size &&
+                segments
+                    .slice(0 until normalizedOther.segments.size)
+                    .filterIndexed { index, s -> normalizedOther.segments[index] != s }
+                    .isEmpty()
     }
 }
