@@ -134,6 +134,14 @@ class UnitTest {
     }
 
     @Test
+    fun testPathJoin() {
+        assertEquals("a/b".toPath(), "a".toPath() / "b")
+        assertEquals("a/b/c/d".toPath(), "a".toPath().join(listOf("b/", "c/d/")))
+        assertEquals("a".toPath(), "a".toPath().join(listOf("")))
+        assertEquals("a".toPath(), "a".toPath().join(listOf()))
+    }
+
+    @Test
     fun testStartsWith() {
         listOf(
             "/a/b/c/d" to "/a/b/c",

@@ -11,6 +11,7 @@ import platform.posix.opendir
 import platform.posix.readdir
 import okio.FileSystem
 import okio.Path
+import okio.Path.Companion.toPath
 import okio.buffer
 import okio.use
 import platform.posix.S_IFDIR
@@ -100,6 +101,18 @@ fun Path.startsWith(other: Path): Boolean = normalized().run {
                     .filterIndexed { index, s -> normalizedOther.segments[index] != s }
                     .isEmpty()
     }
+}
+
+/**
+ * Extends a path with a list of directory [steps].
+ * @receiver a path to be extended.
+ * @return an extended path.
+ */
+fun Path.join(steps: List<String>): Path {
+    return if (steps.isNotEmpty()) this / steps
+        .map { it.toPath() }
+        .reduce { acc, step -> acc / step }
+    else this
 }
 
 /**
