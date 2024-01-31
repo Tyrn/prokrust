@@ -4,6 +4,7 @@ import com.github.ajalt.clikt.parameters.arguments.validate
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
+import okio.Path
 import okio.Path.Companion.toPath
 import kotlin.math.log
 import kotlin.math.pow
@@ -271,15 +272,31 @@ class Prokrust : CliktCommand(
     }
 }
 
-fun appMain() {
-    show("¡Hola, Kitty!")
-    show("Check verbose: ${opt.verbose}")
+data class FileTreeLeaf(val stepDown: List<String>, val file: Path)
 
-    val lst = dirsAndFilesListPosix(".")
-    show("lst = $lst")
-    val (dirs, files) = dirsAndFilesPairPosix(".")
-    show("dirs = $dirs, files = $files")
-    fileCopy(opt.src.toPath(), opt.dst.toPath())
+fun dirWalk(stepDown: List<String>, dir: Path): Sequence<FileTreeLeaf> {
+    val (dirs, files) = dirsAndFilesPairPosix(dir.toString())
+
+    fun walkInto(dirs: Sequence<String>): Sequence<FileTreeLeaf> {
+        return dirs.flatMap { directory ->
+            val step = stepDown + directory
+            sequenceOf(FileTreeLeaf(step, directory.toPath())) + dirWalk(
+                step,
+                dir / directory,
+            )
+        }
+    }
+
+    fun walkAlong(files: Sequence<String>): Sequence<FileTreeLeaf> {
+        return files.map { FileTreeLeaf(stepDown, it.toPath()) }
+    }
+    return walkInto(dirs.asSequence()) + walkAlong(files.asSequence())
+}
+
+fun appMain() {
+    dirWalk(listOf(), opt.src.toPath()).forEach {
+        show("${it.stepDown} ${it.file}")
+    }
 }
 
 fun show(str: String) {
