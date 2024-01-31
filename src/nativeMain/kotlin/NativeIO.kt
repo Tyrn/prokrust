@@ -115,6 +115,19 @@ fun Path.join(steps: List<String>): Path {
     else this
 }
 
+val rStem = """(.*)\.[^.]*$""".toRegex()
+
+val Path.stem: String
+    get() = rStem.find(this.name)?.groupValues?.get(1) ?: this.name
+
+val rSuffix = """.*\.(.*)$""".toRegex()
+
+val Path.suffix: String
+    get() {
+        val ext = rSuffix.find(this.name)?.groupValues?.get(1) ?: ""
+        return if (ext.isNotEmpty()) ".$ext" else ext
+    }
+
 /**
  * Rounds a float to [decimals].
  * @receiver a float value to be rounded.

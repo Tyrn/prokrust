@@ -72,6 +72,14 @@ inline fun String.compareToNaturally(other: String): Int {
     else this.compareTo(other)
 }
 
+class CompareFiles {
+    companion object : Comparator<String> {
+        override fun compare(a: String, b: String): Int {
+            return a.toPath().name.compareToNaturally(b.toPath().name)
+        }
+    }
+}
+
 val nobiliaryParticles = arrayOf(
     "von", "фон", "van", "ван", "der", "дер", "til", "тиль",
     "zu", "цу", "zum", "цум", "zur", "цур", "af", "аф",
@@ -275,22 +283,20 @@ class Prokrust : CliktCommand(
 data class FileTreeLeaf(val stepsDown: List<String>, val file: Path)
 
 fun dirWalk(stepsDown: List<String>, dir: Path): Sequence<FileTreeLeaf> {
-    val (dirs, files) = dirsAndFilesPairPosix(dir.toString())
+    val (d, f) = dirsAndFilesPairPosix(dir.toString())
+    val dirs = d.sorted().asSequence()
+    val files = f.sortedWith(CompareFiles).asSequence()
 
     fun walkInto(dirs: Sequence<String>): Sequence<FileTreeLeaf> {
         return dirs.flatMap { directory ->
-            val step = stepsDown + directory
-            sequenceOf(FileTreeLeaf(step, directory.toPath())) + dirWalk(
-                step,
-                dir / directory,
-            )
+            dirWalk(stepsDown + directory, dir / directory)
         }
     }
 
     fun walkAlong(files: Sequence<String>): Sequence<FileTreeLeaf> {
         return files.map { FileTreeLeaf(stepsDown, it.toPath()) }
     }
-    return walkInto(dirs.asSequence()) + walkAlong(files.asSequence())
+    return walkInto(dirs) + walkAlong(files)
 }
 
 fun appMain() {

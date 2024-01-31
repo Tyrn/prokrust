@@ -142,6 +142,17 @@ class UnitTest {
     }
 
     @Test
+    fun testPathName() {
+        assertEquals("alfa.mp3", "bobby/alfa.mp3".toPath().name)
+        assertEquals("alfa", "alfa".toPath().stem)
+        assertEquals("alfa", "alfa.".toPath().stem)
+        assertEquals("alfa", "alfa.mp3".toPath().stem)
+        assertEquals("alfa.bravo", "bobby/alfa.bravo.mp3".toPath().stem)
+        assertEquals(".mp3", "bobby/alfa.bravo.mp3".toPath().suffix)
+        assertEquals("", "alfa".toPath().suffix)
+    }
+
+    @Test
     fun testStartsWith() {
         listOf(
             "/a/b/c/d" to "/a/b/c",
