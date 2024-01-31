@@ -272,14 +272,14 @@ class Prokrust : CliktCommand(
     }
 }
 
-data class FileTreeLeaf(val stepDown: List<String>, val file: Path)
+data class FileTreeLeaf(val stepsDown: List<String>, val file: Path)
 
-fun dirWalk(stepDown: List<String>, dir: Path): Sequence<FileTreeLeaf> {
+fun dirWalk(stepsDown: List<String>, dir: Path): Sequence<FileTreeLeaf> {
     val (dirs, files) = dirsAndFilesPairPosix(dir.toString())
 
     fun walkInto(dirs: Sequence<String>): Sequence<FileTreeLeaf> {
         return dirs.flatMap { directory ->
-            val step = stepDown + directory
+            val step = stepsDown + directory
             sequenceOf(FileTreeLeaf(step, directory.toPath())) + dirWalk(
                 step,
                 dir / directory,
@@ -288,14 +288,14 @@ fun dirWalk(stepDown: List<String>, dir: Path): Sequence<FileTreeLeaf> {
     }
 
     fun walkAlong(files: Sequence<String>): Sequence<FileTreeLeaf> {
-        return files.map { FileTreeLeaf(stepDown, it.toPath()) }
+        return files.map { FileTreeLeaf(stepsDown, it.toPath()) }
     }
     return walkInto(dirs.asSequence()) + walkAlong(files.asSequence())
 }
 
 fun appMain() {
     dirWalk(listOf(), opt.src.toPath()).forEach {
-        show("${it.stepDown} ${it.file}")
+        show("${it.stepsDown} ${it.file}")
     }
 }
 
