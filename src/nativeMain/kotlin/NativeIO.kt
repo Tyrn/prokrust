@@ -75,15 +75,24 @@ fun dirsAndFilesPairPosix(parentDir: String): Pair<List<String>, List<String>> {
     return Pair(dirs, files)
 }
 
-fun fileCopy(src: Path, dstDir: Path) {
+/**
+ * Copies [src] file to [dst]. If [dst] is an existing file,
+ * it gets overwritten.
+ */
+fun fileCopy(src: Path, dst: Path) {
     FileSystem.SYSTEM.source(src).use { source ->
-        FileSystem.SYSTEM.sink(dstDir).buffer().use { sink ->
+        FileSystem.SYSTEM.sink(dst).buffer().use { sink ->
             sink.writeAll(source)
         }
     }
 }
 
-fun Path.startsWith(other: Path) = normalized().run {
+/**
+ * Checks path's prefix.
+ * @receiver a path.
+ * @return true, if [other] is a valid prefix of the receiver.
+ */
+fun Path.startsWith(other: Path): Boolean = normalized().run {
     other.normalized().let { normalizedOther ->
         normalizedOther.segments.size <= segments.size &&
                 segments
