@@ -117,11 +117,17 @@ fun Path.join(steps: List<String>): Path {
 
 val rStem = """(.*)\.[^.]*$""".toRegex()
 
+/**
+ * File name without extension.
+ */
 val Path.stem: String
     get() = rStem.find(this.name)?.groupValues?.get(1) ?: this.name
 
 val rSuffix = """.*\.(.*)$""".toRegex()
 
+/**
+ * File name extension prefixed with a dot.
+ */
 val Path.suffix: String
     get() {
         val ext = rSuffix.find(this.name)?.groupValues?.get(1) ?: ""

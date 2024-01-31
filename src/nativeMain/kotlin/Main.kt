@@ -75,7 +75,15 @@ inline fun String.compareToNaturally(other: String): Int {
 class CompareFiles {
     companion object : Comparator<String> {
         override fun compare(a: String, b: String): Int {
-            return a.toPath().name.compareToNaturally(b.toPath().name)
+            return if (opt.sortLex) a.compareTo(b) else a.toPath().stem.compareToNaturally(b.toPath().stem)
+        }
+    }
+}
+
+class ComparePaths {
+    companion object : Comparator<String> {
+        override fun compare(a: String, b: String): Int {
+            return if (opt.sortLex) a.compareTo(b) else a.compareToNaturally(b)
         }
     }
 }
@@ -284,7 +292,7 @@ data class FileTreeLeaf(val stepsDown: List<String>, val file: Path)
 
 fun dirWalk(stepsDown: List<String>, dir: Path): Sequence<FileTreeLeaf> {
     val (d, f) = dirsAndFilesPairPosix(dir.toString())
-    val dirs = d.sorted().asSequence()
+    val dirs = d.sortedWith(ComparePaths).asSequence()
     val files = f.sortedWith(CompareFiles).asSequence()
 
     fun walkInto(dirs: Sequence<String>): Sequence<FileTreeLeaf> {
