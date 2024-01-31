@@ -17,10 +17,15 @@ import platform.posix.S_IFDIR
 import platform.posix.S_IFREG
 import platform.posix.stat
 import kotlin.experimental.ExperimentalNativeApi
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalNativeApi::class)
 val fileSeparator = if (Platform.osFamily == OsFamily.WINDOWS) "\\" else "/"
 
+/**
+ * Walks the [parentDir] via cinterop.
+ * @return a list of directories and files in [parentDir].
+ */
 @OptIn(ExperimentalForeignApi::class)
 fun dirsAndFilesListPosix(parentDir: String): List<String> {
     val dp = opendir(parentDir) ?: throw RuntimeException("Couldn't open directory $parentDir")
@@ -39,6 +44,10 @@ fun dirsAndFilesListPosix(parentDir: String): List<String> {
     return entries
 }
 
+/**
+ * Walks the [parentDir] via cinterop.
+ * @return a list of directories and a list of files in [parentDir].
+ */
 @OptIn(ExperimentalForeignApi::class)
 fun dirsAndFilesPairPosix(parentDir: String): Pair<List<String>, List<String>> {
     val dp = opendir(parentDir) ?: throw RuntimeException("Couldn't open directory $parentDir")
@@ -82,4 +91,27 @@ fun Path.startsWith(other: Path) = normalized().run {
                     .filterIndexed { index, s -> normalizedOther.segments[index] != s }
                     .isEmpty()
     }
+}
+
+/**
+ * Rounds a float to [decimals].
+ * @receiver a float value to be rounded.
+ * @return the rounded value.
+ */
+inline fun Float.roundToDecimals(decimals: Int): Float {
+    var dotAt = 1
+    repeat(decimals) { dotAt *= 10 }
+    val roundedValue = (this * dotAt).roundToInt()
+    return (roundedValue / dotAt) + (roundedValue % dotAt).toFloat() / dotAt
+}
+
+/**
+ * Formats a float to [precision] decimal points.
+ * @receiver a float value to be rounded and converted to String.
+ * @return the rounded and trimmed value.
+ */
+fun Float.trim(precision: Int): String {
+    val parts = this.roundToDecimals(precision).toString().split(".")
+    if (precision == 0) return parts[0]
+    return parts[0] + "." + (parts[1] + "0".repeat(precision)).slice(0..<precision)
 }

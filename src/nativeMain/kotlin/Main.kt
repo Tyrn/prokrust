@@ -8,7 +8,6 @@ import okio.Path.Companion.toPath
 import kotlin.math.log
 import kotlin.math.pow
 import kotlin.math.min
-import kotlin.math.roundToInt
 
 /**
  * Makes a sequence of integers,
@@ -131,36 +130,18 @@ fun initials(authors: String): String {
 }
 
 /**
- * Rounds a float to [decimals].
- * @receiver a float value to be rounded.
- * @return the rounded value.
- */
-inline fun Float.roundToDecimals(decimals: Int): Float {
-    var dotAt = 1
-    repeat(decimals) { dotAt *= 10 }
-    val roundedValue = (this * dotAt).roundToInt()
-    return (roundedValue / dotAt) + (roundedValue % dotAt).toFloat() / dotAt
-}
-
-/**
  * Makes a human readable string representation
  * of [bytes], nicely rounded.
  * @return the rounded and annotated value.
  */
 fun humanFine(bytes: Long): String {
-    fun Float.fmt(precision: Int): String {
-        val parts = this.roundToDecimals(precision).toString().split(".")
-        if (precision == 0) return parts[0]
-        return parts[0] + "." + (parts[1] + "0".repeat(precision)).slice(0..<precision)
-    }
-
     val unitList = arrayOf(
-        { q: Float -> q.fmt(0) },
-        { q: Float -> "${q.fmt(0)}kB" },
-        { q: Float -> "${q.fmt(1)}MB" },
-        { q: Float -> "${q.fmt(2)}GB" },
-        { q: Float -> "${q.fmt(2)}TB" },
-        { q: Float -> "${q.fmt(2)}PB" },
+        { q: Float -> q.trim(0) },
+        { q: Float -> "${q.trim(0)}kB" },
+        { q: Float -> "${q.trim(1)}MB" },
+        { q: Float -> "${q.trim(2)}GB" },
+        { q: Float -> "${q.trim(2)}TB" },
+        { q: Float -> "${q.trim(2)}PB" },
     )
     if (bytes > 1) {
         val exponent = min(
