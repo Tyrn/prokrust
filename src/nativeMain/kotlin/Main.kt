@@ -272,14 +272,18 @@ class Prokrust : CliktCommand(
 }
 
 fun appMain() {
-    opt.echo("¡Hola, Kitty!")
-    opt.echo("Check verbose: ${opt.verbose}")
+    show("¡Hola, Kitty!")
+    show("Check verbose: ${opt.verbose}")
 
     val lst = dirsAndFilesListPosix(".")
-    println("lst = $lst")
+    show("lst = $lst")
     val (dirs, files) = dirsAndFilesPairPosix(".")
-    println("dirs = $dirs, files = $files")
+    show("dirs = $dirs, files = $files")
     fileCopy(opt.src.toPath(), opt.dst.toPath())
+}
+
+fun show(str: String) {
+    opt.echo(str)
 }
 
 val opt = Prokrust()
