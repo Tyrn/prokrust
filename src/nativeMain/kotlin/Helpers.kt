@@ -1,3 +1,5 @@
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlin.math.log
 import kotlin.math.min
 import kotlin.math.pow
@@ -135,12 +137,12 @@ fun initials(authors: String): String {
  */
 fun humanFine(bytes: Long): String {
     val unitList = arrayOf(
-        { q: Float -> q.trim(0) },
-        { q: Float -> "${q.trim(0)}kB" },
-        { q: Float -> "${q.trim(1)}MB" },
-        { q: Float -> "${q.trim(2)}GB" },
-        { q: Float -> "${q.trim(2)}TB" },
-        { q: Float -> "${q.trim(2)}PB" },
+        { q: Double -> q.trim(0) },
+        { q: Double -> "${q.trim(0)}kB" },
+        { q: Double -> "${q.trim(1)}MB" },
+        { q: Double -> "${q.trim(2)}GB" },
+        { q: Double -> "${q.trim(2)}TB" },
+        { q: Double -> "${q.trim(2)}PB" },
     )
     if (bytes > 1) {
         val exponent = min(
@@ -148,9 +150,22 @@ fun humanFine(bytes: Long): String {
             b = unitList.size - 1
         )
         val quotient = bytes / 1024.toDouble().pow(exponent)
-        return unitList[exponent](quotient.toFloat())
+        return unitList[exponent](quotient)
     }
     if (bytes == 0L) return "0"
     if (bytes == 1L) return "1"
     throw RuntimeException("humanFine error; bytes: $bytes")
+}
+
+/**
+ * Evaluates the time interval between [start]
+ * and the moment of call.
+ * @receiver Clock.System
+ * @return the time interval in milliseconds or seconds
+ * as a formatted string.
+ */
+fun Clock.System.stop(start: Instant): String {
+    val space = (this.now() - start).inWholeMilliseconds
+    if (space < 3000L) return "$space ms"
+    return "${space.toDouble().div(1000).trim(1)} s"
 }

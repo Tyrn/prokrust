@@ -112,7 +112,7 @@ class UnitTest {
 
     @Test
     fun testRoundToDecimals() {
-        assertEquals(2.0f, 1.8f.roundToDecimals(0))
+        assertEquals(2.0, 1.8.roundToDecimals(0))
     }
 
     @Test

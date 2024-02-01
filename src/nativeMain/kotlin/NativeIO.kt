@@ -158,23 +158,23 @@ val Path.suffix: String
     }
 
 /**
- * Rounds a float to [decimals].
- * @receiver a float value to be rounded.
+ * Rounds a double to [decimals].
+ * @receiver a double value to be rounded.
  * @return the rounded value.
  */
-inline fun Float.roundToDecimals(decimals: Int): Float {
+inline fun Double.roundToDecimals(decimals: Int): Double {
     var dotAt = 1
     repeat(decimals) { dotAt *= 10 }
     val roundedValue = (this * dotAt).roundToInt()
-    return (roundedValue / dotAt) + (roundedValue % dotAt).toFloat() / dotAt
+    return (roundedValue / dotAt) + (roundedValue % dotAt).toDouble() / dotAt
 }
 
 /**
- * Formats a float to [precision] decimal points.
- * @receiver a float value to be rounded and converted to String.
+ * Formats a double to [precision] decimal points.
+ * @receiver a double value to be rounded and converted to String.
  * @return the rounded and trimmed value.
  */
-fun Float.trim(precision: Int): String {
+fun Double.trim(precision: Int): String {
     val parts = this.roundToDecimals(precision).toString().split(".")
     if (precision == 0) return parts[0]
     return parts[0] + "." + (parts[1] + "0".repeat(precision)).slice(0..<precision)

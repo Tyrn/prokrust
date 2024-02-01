@@ -84,7 +84,7 @@ fun appMain() {
             (if (opt.reverse) filesTotal - index else index + 1).toString(filesTotal.toString().length)
         show("${paddedNumber(index)}/$filesTotal ${element.stepsDown} ${element.file}")
     }
-    show("Time: ${(Clock.System.now() - now)}")
+    show("Time: ${Clock.System.stop(now)}")
 }
 
 fun show(str: String) {
