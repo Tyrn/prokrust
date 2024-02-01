@@ -83,7 +83,8 @@ inline fun String.compareToNaturally(other: String): Int {
 class CompareFiles {
     companion object : Comparator<String> {
         override fun compare(a: String, b: String): Int {
-            return if (opt.sortLex) a.compareTo(b) else a.toPath().stem.compareToNaturally(b.toPath().stem)
+            val (x, y) = if (opt.reverse) b to a else a to b
+            return if (opt.sortLex) x.compareTo(y) else x.toPath().stem.compareToNaturally(y.toPath().stem)
         }
     }
 }
@@ -91,7 +92,8 @@ class CompareFiles {
 class ComparePaths {
     companion object : Comparator<String> {
         override fun compare(a: String, b: String): Int {
-            return if (opt.sortLex) a.compareTo(b) else a.compareToNaturally(b)
+            val (x, y) = if (opt.reverse) b to a else a to b
+            return if (opt.sortLex) x.compareTo(y) else x.compareToNaturally(y)
         }
     }
 }
@@ -307,28 +309,53 @@ class Prokrust : CliktCommand(
     }
 }
 
+/**
+ * Walks down the directory tree.
+ * @receiver Path
+ * @return The sequence of all files.
+ */
+fun Path.walk(): Sequence<String> {
+    val (dirs, files) = dirsAndFilesPairPosix(this.toString())
+    return (
+            dirs.flatMap { directory -> (this / directory).walk() }
+                    + files.filter { it.isAudioFileExt() }
+            )
+}
+
+/**
+ * A [file] with its corresponding [stepsDown] list.
+ */
 data class FileTreeLeaf(val stepsDown: List<String>, val file: Path)
 
-fun dirWalk(stepsDown: List<String>, dir: Path): Sequence<FileTreeLeaf> {
-    val (d, f) = dirsAndFilesPairPosix(dir.toString())
-    val dirs = d.sortedWith(ComparePaths)
-    val files = f.filter { it.isAudioFileExt() }.sortedWith(CompareFiles)
+/**
+ * Walks down the directory tree, accumulating
+ * [stepsDown] on each recursion level.
+ * @receiver Path
+ * @return the sequence of all files,
+ * each with its corresponding [stepsDown] list.
+ */
+fun Path.walk(stepsDown: List<String>): Sequence<FileTreeLeaf> {
+    val (dirs, files) = dirsAndFilesPairPosix(this.toString())
 
-    fun walkInto(dirs: Sequence<String>): Sequence<FileTreeLeaf> {
-        return dirs.flatMap { directory ->
-            dirWalk(stepsDown + directory, dir / directory)
+    fun walkInto(dirs: Sequence<String>) =
+        dirs.sortedWith(ComparePaths).flatMap { directory ->
+            (this / directory).walk(stepsDown + directory)
         }
-    }
 
-    fun walkAlong(files: Sequence<String>): Sequence<FileTreeLeaf> {
-        return files.map { FileTreeLeaf(stepsDown, it.toPath()) }
-    }
-    return walkInto(dirs) + walkAlong(files)
+    fun walkAlong(files: Sequence<String>) =
+        files.filter { it.isAudioFileExt() }.sortedWith(CompareFiles)
+            .map { FileTreeLeaf(stepsDown, it.toPath()) }
+
+    return if (opt.reverse) walkAlong(files) + walkInto(dirs)
+    else walkInto(dirs) + walkAlong(files)
 }
 
 fun appMain() {
-    dirWalk(listOf(), opt.src.toPath()).forEach {
-        show("${it.stepsDown} ${it.file}")
+    val filesTotal = opt.src.toPath().walk()
+        .map { 1 }
+        .sum()
+    opt.src.toPath().walk(listOf()).forEachIndexed { index, element ->
+        show("${if (opt.reverse) filesTotal - index else index + 1}/$filesTotal ${element.stepsDown} ${element.file}")
     }
 }
 
