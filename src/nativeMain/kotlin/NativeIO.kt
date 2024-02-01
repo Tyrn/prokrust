@@ -77,7 +77,7 @@ fun dirsAndFilesListPosix(parentDir: String): List<String> {
  * @return a list of directories and a list of files in [parentDir].
  */
 @OptIn(ExperimentalForeignApi::class)
-fun dirsAndFilesPairPosix(parentDir: String): Pair<List<String>, List<String>> {
+fun dirsAndFilesPairPosix(parentDir: String): Pair<Sequence<String>, Sequence<String>> {
     val dp = opendir(parentDir) ?: throw RuntimeException("Couldn't open directory $parentDir")
     val dirs = mutableListOf<String>()
     val files = mutableListOf<String>()
@@ -100,7 +100,7 @@ fun dirsAndFilesPairPosix(parentDir: String): Pair<List<String>, List<String>> {
         }
     }
     closedir(dp)
-    return Pair(dirs, files)
+    return Pair(dirs.asSequence(), files.asSequence())
 }
 
 /**

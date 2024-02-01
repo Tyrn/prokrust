@@ -58,6 +58,14 @@ inline fun IntArray.compareTo(other: IntArray): Int {
 }
 
 /**
+ * The sequence isn't spent.
+ * An ad hoc drop-in replacement for List.isNotEmpty().
+ * @receiver Sequence
+ * @return the sequence is still iterable.
+ */
+inline fun Sequence<Int>.isNotEmpty(): Boolean = this.iterator().hasNext()
+
+/**
  * If both [this] and [other] contain digits, returns numerical comparison based on the numeric
  * values embedded in the strings, otherwise returns the standard string comparison.
  * The idea of the natural sort as opposed to the standard lexicographic sort is one of coping
@@ -65,8 +73,8 @@ inline fun IntArray.compareTo(other: IntArray): Int {
  * @return lt | eq | gt
  */
 inline fun String.compareToNaturally(other: String): Int {
-    val nx = this.stripNumbers()
-    val ny = other.stripNumbers()
+    val nx = this.stripNumbersLazy()
+    val ny = other.stripNumbersLazy()
 
     return if (nx.isNotEmpty() && ny.isNotEmpty()) nx.compareTo(ny)
     else this.compareTo(other)
@@ -290,8 +298,8 @@ data class FileTreeLeaf(val stepsDown: List<String>, val file: Path)
 
 fun dirWalk(stepsDown: List<String>, dir: Path): Sequence<FileTreeLeaf> {
     val (d, f) = dirsAndFilesPairPosix(dir.toString())
-    val dirs = d.sortedWith(ComparePaths).asSequence()
-    val files = f.sortedWith(CompareFiles).asSequence()
+    val dirs = d.sortedWith(ComparePaths)
+    val files = f.sortedWith(CompareFiles)
 
     fun walkInto(dirs: Sequence<String>): Sequence<FileTreeLeaf> {
         return dirs.flatMap { directory ->
