@@ -4,6 +4,7 @@ dependencyResolutionManagement {
             version("clikt", "4.2.2")
             version("kotlin", "1.9.22")
             version("okio", "3.7.0")
+            version("kotlinx-datetime", "0.5.0")
             version("kotest", "5.7.2")
             plugin(
                 "kotlin-multiplatform",
@@ -29,6 +30,11 @@ dependencyResolutionManagement {
                 "com.squareup.okio",
                 "okio"
             ).versionRef("okio")
+            library(
+                "datetime",
+                "org.jetbrains.kotlinx",
+                "kotlinx-datetime"
+            ).versionRef("kotlinx-datetime")
             // library(
             //     "kotest-",
             //     "io.kotest",

@@ -1,3 +1,4 @@
+import kotlinx.datetime.Clock
 import okio.Path
 import okio.Path.Companion.toPath
 
@@ -77,11 +78,13 @@ fun appMain() {
     val filesTotal = opt.src.toPath().walk()
         .map { 1 }
         .sum()
+    val now = Clock.System.now()
     opt.src.toPath().walk(listOf()).forEachIndexed { index, element ->
         fun paddedNumber(index: Int): String =
             (if (opt.reverse) filesTotal - index else index + 1).toString(filesTotal.toString().length)
         show("${paddedNumber(index)}/$filesTotal ${element.stepsDown} ${element.file}")
     }
+    show("Time: ${(Clock.System.now() - now)}")
 }
 
 fun show(str: String) {

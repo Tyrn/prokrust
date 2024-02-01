@@ -28,6 +28,7 @@ kotlin {
             dependencies {
                 implementation(libs.clikt.clikt)
                 implementation(libs.okio.okio)
+                implementation(libs.datetime)
             }
         }
         val nativeTest by getting {
