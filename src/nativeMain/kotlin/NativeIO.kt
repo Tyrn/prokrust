@@ -23,6 +23,33 @@ import kotlin.math.roundToInt
 @OptIn(ExperimentalNativeApi::class)
 val fileSeparator = if (Platform.osFamily == OsFamily.WINDOWS) "\\" else "/"
 
+object Reg {
+    /**
+     * A regular expression catching sequences of one or more digits.
+     */
+    val numbers = "\\d+".toRegex()
+
+    /**
+     * A regular expression catching file name without extension.
+     */
+    val stem = """(.*)\.[^.]*$""".toRegex()
+
+    /**
+     * A regular expression catching file name extension.
+     */
+    val suffix = """.*\.(.*)$""".toRegex()
+
+    /**
+     * A regular expression catching sequences of dots and space characters.
+     */
+    val dots = "[\\s.]+".toRegex()
+
+    /**
+     * A regular expression catching double-quoted substrings.
+     */
+    val quotedSubstrings = """"(?:\\.|[^"\\])*"""".toRegex()
+}
+
 /**
  * Walks the [parentDir] via cinterop.
  * @return a list of directories and files in [parentDir].
@@ -115,22 +142,18 @@ fun Path.join(steps: List<String>): Path {
     else this
 }
 
-val rStem = """(.*)\.[^.]*$""".toRegex()
-
 /**
  * File name without extension.
  */
 val Path.stem: String
-    get() = rStem.find(this.name)?.groupValues?.get(1) ?: this.name
-
-val rSuffix = """.*\.(.*)$""".toRegex()
+    get() = Reg.stem.find(this.name)?.groupValues?.get(1) ?: this.name
 
 /**
  * File name extension prefixed with a dot.
  */
 val Path.suffix: String
     get() {
-        val ext = rSuffix.find(this.name)?.groupValues?.get(1) ?: ""
+        val ext = Reg.suffix.find(this.name)?.groupValues?.get(1) ?: ""
         return if (ext.isNotEmpty()) ".$ext" else ext
     }
 

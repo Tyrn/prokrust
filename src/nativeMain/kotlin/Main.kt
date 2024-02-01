@@ -16,7 +16,7 @@ import kotlin.math.min
  * @return sequence of integers to be read from left to right.
  */
 inline fun String.stripNumbersLazy(): Sequence<Int> {
-    return "\\d+".toRegex().findAll(this)
+    return Reg.numbers.findAll(this)
         .map { it.value.toInt() }
 }
 
@@ -40,7 +40,7 @@ inline fun Sequence<Int>.compareTo(other: Sequence<Int>): Int {
  * @return vector of integers read from left to right.
  */
 inline fun String.stripNumbers(): IntArray {
-    return "\\d+".toRegex().findAll(this)
+    return Reg.numbers.findAll(this)
         .map { it.value.toInt() }
         .toList()
         .toIntArray()
@@ -95,8 +95,6 @@ val nobiliaryParticles = arrayOf(
     "del", "дель", "di", "ди", "dos", "душ", "дос", "du", "дю",
     "la", "ла", "ля", "le", "ле", "haut", "от", "the",
 )
-val rDots = "[\\s.]+".toRegex()
-val rQuotedSubstrings = """"(?:\\.|[^"\\])*"""".toRegex()
 
 /**
  * Reduces [authors] to initials.
@@ -129,7 +127,7 @@ fun initials(authors: String): String {
         return name[0].toString().uppercase()
     }
     return authors
-        .replace(rQuotedSubstrings, " ")
+        .replace(Reg.quotedSubstrings, " ")
         .replace("\"", " ")
         .split(",")
         .filter { author -> author.replace(".", "").replace("-", "").trim().isNotEmpty() }
@@ -139,7 +137,7 @@ fun initials(authors: String): String {
                 .filter { barrel -> barrel.replace(".", "").trim().isNotEmpty() }
                 .joinToString("-") { barrel ->
                     barrel
-                        .split(rDots)
+                        .split(Reg.dots)
                         .filter { name -> name.isNotEmpty() }
                         .joinToString(".") { name -> formInitial(name) }
                 } + "."

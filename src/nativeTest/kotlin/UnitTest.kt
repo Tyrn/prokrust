@@ -52,8 +52,8 @@ class UnitTest {
         // There are four delimiters: comma, hyphen, dot, and space.
         // initials() syntax philosophy: if a delimiter is
         // misplaced, it's ignored.
-        assertEquals("A B C", rDots.replace("A. ..B..C", " "))
-        assertEquals("A B C", rQuotedSubstrings.replace("A\"Dobby\"B\"Bobby\"C", " "))
+        assertEquals("A B C", Reg.dots.replace("A. ..B..C", " "))
+        assertEquals("A B C", Reg.quotedSubstrings.replace("A\"Dobby\"B\"Bobby\"C", " "))
         assertEquals("", initials(""))
         assertEquals("", initials(" "))
         assertEquals("", initials(".. , .. "))
