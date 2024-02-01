@@ -96,6 +96,19 @@ class ComparePaths {
     }
 }
 
+val knownExtensions =
+    arrayOf(".MP3", ".OGG", ".M4A", ".M4B", ".OPUS", ".WMA", ".FLAC", ".APE", ".WAV")
+
+/**
+ * This name has an audio file extension.
+ * @receiver String
+ * @return this name has an audio file extension.
+ */
+fun String.isAudioFileExt(): Boolean {
+    return knownExtensions
+        .any { this.toPath().suffix.uppercase() == it }
+}
+
 val nobiliaryParticles = arrayOf(
     "von", "фон", "van", "ван", "der", "дер", "til", "тиль",
     "zu", "цу", "zum", "цум", "zur", "цур", "af", "аф",
@@ -299,7 +312,7 @@ data class FileTreeLeaf(val stepsDown: List<String>, val file: Path)
 fun dirWalk(stepsDown: List<String>, dir: Path): Sequence<FileTreeLeaf> {
     val (d, f) = dirsAndFilesPairPosix(dir.toString())
     val dirs = d.sortedWith(ComparePaths)
-    val files = f.sortedWith(CompareFiles)
+    val files = f.filter { it.isAudioFileExt() }.sortedWith(CompareFiles)
 
     fun walkInto(dirs: Sequence<String>): Sequence<FileTreeLeaf> {
         return dirs.flatMap { directory ->
