@@ -179,3 +179,14 @@ fun Float.trim(precision: Int): String {
     if (precision == 0) return parts[0]
     return parts[0] + "." + (parts[1] + "0".repeat(precision)).slice(0..<precision)
 }
+
+/**
+ * Converts Int to String with padding up to [width].
+ * @receiver Int
+ * @return the padded string representing the integer.
+ */
+fun Int.toString(width: Int, pad: Char = ' '): String {
+    val str = this.toString()
+    if (width < str.length) throw RuntimeException("Int.toString() extension: width $width too small")
+    return pad.toString().repeat(width - str.length) + str
+}

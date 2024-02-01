@@ -153,6 +153,15 @@ class UnitTest {
     }
 
     @Test
+    fun testToString() {
+        val int = 2245
+        val str = int.toString()
+        assertEquals(int.toString(), int.toString(str.length))
+        assertEquals(" $str", int.toString(str.length + 1))
+        assertEquals("00$str", int.toString(str.length + 2, '0'))
+    }
+
+    @Test
     fun testStartsWith() {
         listOf(
             "/a/b/c/d" to "/a/b/c",

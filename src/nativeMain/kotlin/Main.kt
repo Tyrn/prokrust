@@ -78,7 +78,9 @@ fun appMain() {
         .map { 1 }
         .sum()
     opt.src.toPath().walk(listOf()).forEachIndexed { index, element ->
-        show("${if (opt.reverse) filesTotal - index else index + 1}/$filesTotal ${element.stepsDown} ${element.file}")
+        fun paddedNumber(index: Int): String =
+            (if (opt.reverse) filesTotal - index else index + 1).toString(filesTotal.toString().length)
+        show("${paddedNumber(index)}/$filesTotal ${element.stepsDown} ${element.file}")
     }
 }
 
