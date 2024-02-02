@@ -81,10 +81,11 @@ fun artistPart(forwDash: Boolean): String =
     else ""
 
 fun dstCalculate(): Path {
-    val prefix = opt.albumNum?.toString(2, '0') ?: ""
+    val prefix = if (opt.albumNum != null) "${opt.albumNum?.toString(2, '0')}-"
+    else ""
     val baseDst = prefix + if (opt.unifiedName != null) "${artistPart(false)}${opt.unifiedName}"
     else opt.src.toPath().name
-    return baseDst.toPath()
+    return if (opt.dropDst) opt.dst.toPath() else opt.dst.toPath() / baseDst
 }
 
 fun appMain() {
