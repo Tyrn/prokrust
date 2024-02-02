@@ -107,8 +107,8 @@ fun dirsAndFilesPairPosix(parentDir: String): Pair<Sequence<String>, Sequence<St
  * Copies [src] file to [dst]. If [dst] is an existing file,
  * it gets overwritten.
  */
-fun fileCopy(src: Path, dst: Path) {
-    FileSystem.SYSTEM.source(src).use { source ->
+fun Path.fileCopy(dst: Path) {
+    FileSystem.SYSTEM.source(this).use { source ->
         FileSystem.SYSTEM.sink(dst).buffer().use { sink ->
             sink.writeAll(source)
         }

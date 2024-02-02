@@ -89,20 +89,36 @@ fun dstCalculate(): Path {
     return if (opt.dropDst) opt.dst.toPath() else opt.dst.toPath() / baseDst
 }
 
+fun Path.fileCopyAndSetTags(i: Int, dst: Path) {
+    this.fileCopy(dst)
+}
+
+fun FileTreeLeaf.trackCopy(i: Int, dst: Path, tracksTotal: Int) {
+    fun paddedNumber(i: Int): String =
+        (if (opt.reverse) tracksTotal - i else i + 1).toString(tracksTotal.toString().length)
+
+    show("${paddedNumber(i)}/$tracksTotal ${this.stepsDown} ${this.file}")
+}
+
+fun albumCopy(tracksTotal: Int) {
+    val dst = dstCalculate()
+    FileSystem.SYSTEM.createDirectory(dst)
+
+    opt.src.toPath().walk(listOf()).forEachIndexed { i, srcTreeLeaf ->
+        srcTreeLeaf.trackCopy(i, dst, tracksTotal)
+    }
+    show(dst.toString())
+}
+
 fun appMain() {
-    val filesTotal = opt.src.toPath().walk()
+    val start = Clock.System.now()
+    val tracksTotal = opt.src.toPath().walk()
         .map { 1 }
         .sum()
-    val now = Clock.System.now()
-    opt.src.toPath().walk(listOf()).forEachIndexed { index, element ->
-        fun paddedNumber(index: Int): String =
-            (if (opt.reverse) filesTotal - index else index + 1).toString(filesTotal.toString().length)
-        show("${paddedNumber(index)}/$filesTotal ${element.stepsDown} ${element.file}")
-    }
-    show("Time: ${Clock.System.stop(now)}")
-    val dst = dstCalculate()
-    show(dst.toString())
-    FileSystem.SYSTEM.createDirectory(dst)
+
+    albumCopy(tracksTotal)
+
+    show("Time: ${Clock.System.stop(start)}")
 }
 
 fun show(str: String) {
