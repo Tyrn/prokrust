@@ -1,4 +1,5 @@
 import kotlinx.datetime.Clock
+import okio.FileSystem
 import okio.Path
 import okio.Path.Companion.toPath
 
@@ -99,7 +100,9 @@ fun appMain() {
         show("${paddedNumber(index)}/$filesTotal ${element.stepsDown} ${element.file}")
     }
     show("Time: ${Clock.System.stop(now)}")
-    show(dstCalculate().toString())
+    val dst = dstCalculate()
+    show(dst.toString())
+    FileSystem.SYSTEM.createDirectory(dst)
 }
 
 fun show(str: String) {
