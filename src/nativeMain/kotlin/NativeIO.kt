@@ -55,7 +55,7 @@ object Reg {
  * @return a list of directories and files in [parentDir].
  */
 @OptIn(ExperimentalForeignApi::class)
-fun dirsAndFilesListPosix(parentDir: String): List<String> {
+fun dirsAndFilesPosix(parentDir: String): List<String> {
     val dp = opendir(parentDir) ?: throw RuntimeException("Couldn't open directory $parentDir")
     val entries = mutableListOf<String>()
     memScoped {
@@ -74,10 +74,10 @@ fun dirsAndFilesListPosix(parentDir: String): List<String> {
 
 /**
  * Walks the [parentDir] via cinterop.
- * @return a list of directories and a list of files in [parentDir].
+ * @return a sequence of directories and a sequence of files in [parentDir].
  */
 @OptIn(ExperimentalForeignApi::class)
-fun dirsAndFilesPairPosix(parentDir: String): Pair<Sequence<String>, Sequence<String>> {
+fun dirsAndFilesLazyPosix(parentDir: String): Pair<Sequence<String>, Sequence<String>> {
     val dp = opendir(parentDir) ?: throw RuntimeException("Couldn't open directory $parentDir")
     val dirs = mutableListOf<String>()
     val files = mutableListOf<String>()

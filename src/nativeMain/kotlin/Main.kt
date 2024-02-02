@@ -40,7 +40,7 @@ fun String.isAudioFileExt(): Boolean {
  * @return The sequence of all files.
  */
 fun Path.walk(): Sequence<String> {
-    val (dirs, files) = dirsAndFilesPairPosix(this.toString())
+    val (dirs, files) = dirsAndFilesLazyPosix(this.toString())
     return (
             dirs.flatMap { directory -> (this / directory).walk() }
                     + files.filter { it.isAudioFileExt() }
@@ -60,7 +60,7 @@ data class FileTreeLeaf(val stepsDown: List<String>, val file: Path)
  * each with its corresponding [stepsDown] list.
  */
 fun Path.walk(stepsDown: List<String>): Sequence<FileTreeLeaf> {
-    val (dirs, files) = dirsAndFilesPairPosix(this.toString())
+    val (dirs, files) = dirsAndFilesLazyPosix(this.toString())
 
     fun walkInto(dirs: Sequence<String>) =
         dirs.sortedWith(ComparePaths).flatMap { directory ->
