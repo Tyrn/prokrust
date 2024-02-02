@@ -74,6 +74,19 @@ fun Path.walk(stepsDown: List<String>): Sequence<FileTreeLeaf> {
     else walkInto(dirs) + walkAlong(files)
 }
 
+fun artistPart(forwDash: Boolean): String =
+    if (opt.artist != null)
+        if (forwDash) " - ${opt.artist}"
+        else "${opt.artist} - "
+    else ""
+
+fun dstCalculate(): Path {
+    val prefix = opt.albumNum?.toString(2, '0') ?: ""
+    val baseDst = prefix + if (opt.unifiedName != null) "${artistPart(false)}${opt.unifiedName}"
+    else opt.src.toPath().name
+    return baseDst.toPath()
+}
+
 fun appMain() {
     val filesTotal = opt.src.toPath().walk()
         .map { 1 }
@@ -85,6 +98,7 @@ fun appMain() {
         show("${paddedNumber(index)}/$filesTotal ${element.stepsDown} ${element.file}")
     }
     show("Time: ${Clock.System.stop(now)}")
+    show(dstCalculate().toString())
 }
 
 fun show(str: String) {
