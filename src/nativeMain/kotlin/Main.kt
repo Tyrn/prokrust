@@ -94,20 +94,24 @@ fun Path.fileCopyAndSetTags(i: Int, dst: Path) {
 }
 
 fun FileTreeLeaf.trackCopy(i: Int, dst: Path, tracksTotal: Int) {
-    fun paddedNumber(i: Int): String =
-        (if (opt.reverse) tracksTotal - i else i + 1).toString(tracksTotal.toString().length)
+    val destination = dst.join(this.stepsDown)
+    FileSystem.SYSTEM.createDirectories(destination, false)
 
-    show("${paddedNumber(i)}/$tracksTotal ${this.stepsDown} ${this.file}")
+    opt.src.toPath().join(this.stepsDown).div(this.file)
+        .fileCopyAndSetTags(i, destination / this.file)
+
+    show("${i.toString(tracksTotal.toString().length)}/$tracksTotal ${destination / this.file}")
 }
 
 fun albumCopy(tracksTotal: Int) {
+    inline fun norm(i: Int) = if (opt.reverse) tracksTotal - i else i + 1
+
     val dst = dstCalculate()
-    FileSystem.SYSTEM.createDirectory(dst)
+    FileSystem.SYSTEM.createDirectory(dst, false)
 
     opt.src.toPath().walk(listOf()).forEachIndexed { i, srcTreeLeaf ->
-        srcTreeLeaf.trackCopy(i, dst, tracksTotal)
+        srcTreeLeaf.trackCopy(norm(i), dst, tracksTotal)
     }
-    show(dst.toString())
 }
 
 fun appMain() {

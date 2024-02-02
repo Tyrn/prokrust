@@ -103,6 +103,10 @@ fun dirsAndFilesPairPosix(parentDir: String): Pair<Sequence<String>, Sequence<St
     return Pair(dirs.asSequence(), files.asSequence())
 }
 
+val Path.isDirectory get() = FileSystem.SYSTEM.metadataOrNull(this)?.isDirectory == true
+val Path.isRegularFile get() = FileSystem.SYSTEM.metadataOrNull(this)?.isRegularFile == true
+val Path.isNone get() = !this.isDirectory && !this.isRegularFile
+
 /**
  * Copies [src] file to [dst]. If [dst] is an existing file,
  * it gets overwritten.
