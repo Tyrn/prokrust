@@ -107,15 +107,12 @@ fun dirsAndFilesLazyPosix(parentDir: String): Pair<Sequence<String>, Sequence<St
  * Walks [this].
  * @receiver Path
  * @return a sequence of directories and a sequence of files
- * in [this] directory.
+ * (names only) in [this] directory.
  */
 fun Path.listLazy(): Pair<Sequence<String>, Sequence<String>> {
-    val dirs = mutableListOf<String>()
-    val files = mutableListOf<String>()
-    for (item in FileSystem.SYSTEM.list(this)) {
-        if (item.isDirectory) dirs.add(item.name) else files.add(item.name)
-    }
-    return Pair(dirs.asSequence(), files.asSequence())
+    val (dirs, files) = FileSystem.SYSTEM.list(this)
+        .partition { it.isDirectory }
+    return Pair(dirs.map { it.name }.asSequence(), files.map { it.name }.asSequence())
 }
 
 val Path.isDirectory get() = FileSystem.SYSTEM.metadataOrNull(this)?.isDirectory == true
