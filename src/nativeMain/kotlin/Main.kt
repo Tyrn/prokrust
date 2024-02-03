@@ -60,7 +60,7 @@ data class FileTreeLeaf(val stepsDown: List<String>, val file: Path)
  * each with its corresponding [stepsDown] list.
  */
 fun Path.walk(stepsDown: List<String>): Sequence<FileTreeLeaf> {
-    val (dirs, files) = dirsAndFilesLazyPosix(this.toString())
+    val (dirs, files) = this.listLazy()
 
     fun walkInto(dirs: Sequence<String>) =
         dirs.sortedWith(ComparePaths).flatMap { directory ->
