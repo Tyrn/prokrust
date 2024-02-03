@@ -123,7 +123,7 @@ val Path.isRegularFile get() = FileSystem.SYSTEM.metadataOrNull(this)?.isRegular
 val Path.isNone get() = !this.isDirectory && !this.isRegularFile
 
 /**
- * Copies [src] file to [dst]. If [dst] is an existing file,
+ * Copies [this] file to [dst]. If [dst] is an existing file,
  * it gets overwritten.
  */
 fun Path.fileCopy(dst: Path) {
