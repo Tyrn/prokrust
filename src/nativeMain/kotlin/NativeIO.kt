@@ -115,6 +115,26 @@ fun Path.listLazy(): Pair<Sequence<String>, Sequence<String>> {
     return Pair(dirs.map { it.name }.asSequence(), files.map { it.name }.asSequence())
 }
 
+/**
+ * Delete [this] directory with everything in it.
+ * @receiver Path
+ */
+fun Path.deleteRecursively() {
+    FileSystem.SYSTEM.deleteRecursively(this, true)
+}
+
+/**
+ * Delete [this] directory with everything in it.
+ * @receiver Path
+ */
+fun Path.deleteAll() {
+    val (dirs, files) = FileSystem.SYSTEM.list(this)
+        .partition { it.isDirectory }
+    files.map { file -> FileSystem.SYSTEM.delete(file, true) }
+    dirs.map { it.deleteAll() }
+    FileSystem.SYSTEM.delete(this, true)
+}
+
 val Path.isDirectory get() = FileSystem.SYSTEM.metadataOrNull(this)?.isDirectory == true
 val Path.isRegularFile get() = FileSystem.SYSTEM.metadataOrNull(this)?.isRegularFile == true
 val Path.isNone get() = !this.isDirectory && !this.isRegularFile
