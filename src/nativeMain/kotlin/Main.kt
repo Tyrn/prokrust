@@ -35,10 +35,10 @@ fun String.isAudioFileExt(): Boolean {
         .any { this.toPath().suffix.uppercase() == it }
 }
 
-data class FirstPass(val track: Int, val bytes: Long)
+data class FirstPass(val tracks: Int, val bytes: Long)
 
 operator fun FirstPass.plus(b: FirstPass): FirstPass =
-    FirstPass(this.track + b.track, this.bytes + b.bytes)
+    FirstPass(this.tracks + b.tracks, this.bytes + b.bytes)
 
 /**
  * Walks down the directory tree.
@@ -102,7 +102,7 @@ fun Path.fileCopyAndSetTags(i: Int, dst: Path) {
     this.fileCopy(dst)
 }
 
-fun FileTreeLeaf.trackCopy(i: Int, dst: Path, tracksTotal: Int) {
+fun FileTreeLeaf.trackCopy(i: Int, dst: Path, total: FirstPass) {
     val destination = dst.join(this.stepsDown)
     FileSystem.SYSTEM.createDirectories(destination, false)
 
@@ -110,12 +110,12 @@ fun FileTreeLeaf.trackCopy(i: Int, dst: Path, tracksTotal: Int) {
         .fileCopyAndSetTags(i, destination / this.file)
 
     if (opt.verbose)
-        show("${i.toString(tracksTotal.toString().length)}/$tracksTotal ${destination / this.file}")
+        show("${i.toString(total.tracks.toString().length)}/${total.tracks} ${destination / this.file}")
     else show(".", false)
 }
 
-fun albumCopy(start: Instant, tracksTotal: Int) {
-    inline fun norm(i: Int) = if (opt.reverse) tracksTotal - i else i + 1
+fun albumCopy(start: Instant, total: FirstPass) {
+    inline fun norm(i: Int) = if (opt.reverse) total.tracks - i else i + 1
 
     val dst = dstCalculate()
     FileSystem.SYSTEM.createDirectory(dst, false)
@@ -124,7 +124,7 @@ fun albumCopy(start: Instant, tracksTotal: Int) {
         show("Starting ", false)
 
     opt.src.toPath().walk(listOf()).forEachIndexed { i, srcTreeLeaf ->
-        srcTreeLeaf.trackCopy(norm(i), dst, tracksTotal)
+        srcTreeLeaf.trackCopy(norm(i), dst, total)
     }
 
     show(" Time: ${Clock.System.stop(start)}")
@@ -132,11 +132,11 @@ fun albumCopy(start: Instant, tracksTotal: Int) {
 
 fun appMain() {
     val start = Clock.System.now()
-    val firstPass: FirstPass = opt.src.toPath().walk()
+    val total: FirstPass = opt.src.toPath().walk()
         .reduce { acc, i -> acc + i }
 
-    albumCopy(start, firstPass.track)
-    show(humanFine(firstPass.bytes))
+    albumCopy(start, total)
+    show(humanFine(total.bytes))
 }
 
 fun show(str: String, trailingNewLine: Boolean = true) {
