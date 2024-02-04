@@ -40,7 +40,7 @@ fun String.isAudioFileExt(): Boolean {
  * @return The sequence of all files.
  */
 fun Path.walk(): Sequence<String> {
-    val (dirs, files) = dirsAndFilesLazyPosix(this.toString())
+    val (dirs, files) = this.listLazy()
     return (
             dirs.flatMap { directory -> (this / directory).walk() }
                     + files.filter { it.isAudioFileExt() }

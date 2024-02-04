@@ -137,7 +137,7 @@ fun Path.deleteAll() {
 
 val Path.isDirectory get() = FileSystem.SYSTEM.metadataOrNull(this)?.isDirectory == true
 val Path.isRegularFile get() = FileSystem.SYSTEM.metadataOrNull(this)?.isRegularFile == true
-val Path.isNone get() = !this.isDirectory && !this.isRegularFile
+fun Path.exists() = FileSystem.SYSTEM.exists(this)
 
 /**
  * Copies [this] file to [dst]. If [dst] is an existing file,
