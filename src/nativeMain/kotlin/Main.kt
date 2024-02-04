@@ -1,4 +1,5 @@
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import okio.FileSystem
 import okio.Path
 import okio.Path.Companion.toPath
@@ -100,18 +101,25 @@ fun FileTreeLeaf.trackCopy(i: Int, dst: Path, tracksTotal: Int) {
     opt.src.toPath().join(this.stepsDown).div(this.file)
         .fileCopyAndSetTags(i, destination / this.file)
 
-    show("${i.toString(tracksTotal.toString().length)}/$tracksTotal ${destination / this.file}")
+    if (opt.verbose)
+        show("${i.toString(tracksTotal.toString().length)}/$tracksTotal ${destination / this.file}")
+    else show(".", false)
 }
 
-fun albumCopy(tracksTotal: Int) {
+fun albumCopy(start: Instant, tracksTotal: Int) {
     inline fun norm(i: Int) = if (opt.reverse) tracksTotal - i else i + 1
 
     val dst = dstCalculate()
     FileSystem.SYSTEM.createDirectory(dst, false)
 
+    if (!opt.verbose)
+        show("Starting ", false)
+
     opt.src.toPath().walk(listOf()).forEachIndexed { i, srcTreeLeaf ->
         srcTreeLeaf.trackCopy(norm(i), dst, tracksTotal)
     }
+
+    show(" Time: ${Clock.System.stop(start)}")
 }
 
 fun appMain() {
@@ -120,13 +128,11 @@ fun appMain() {
         .map { 1 }
         .sum()
 
-    albumCopy(tracksTotal)
-
-    show("Time: ${Clock.System.stop(start)}")
+    albumCopy(start, tracksTotal)
 }
 
-fun show(str: String) {
-    opt.echo(str)
+fun show(str: String, trailingNewLine: Boolean = true) {
+    opt.echo(str, trailingNewLine)
 }
 
 val opt = Prokrust()
