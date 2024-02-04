@@ -35,16 +35,24 @@ fun String.isAudioFileExt(): Boolean {
         .any { this.toPath().suffix.uppercase() == it }
 }
 
+data class FirstPass(val track: Int, val bytes: Long)
+
+operator fun FirstPass.plus(b: FirstPass): FirstPass =
+    FirstPass(this.track + b.track, this.bytes + b.bytes)
+
 /**
  * Walks down the directory tree.
  * @receiver Path
  * @return The sequence of all files.
  */
-fun Path.walk(): Sequence<String> {
+fun Path.walk(): Sequence<FirstPass> {
     val (dirs, files) = this.listLazy()
     return (
-            dirs.flatMap { directory -> (this / directory).walk() }
-                    + files.filter { it.isAudioFileExt() }
+            dirs.map { it.name }.flatMap { directory -> (this / directory).walk() }
+                    + files.filter { it.toString().isAudioFileExt() }
+                .map { file ->
+                    FirstPass(1, FileSystem.SYSTEM.metadata(file).size ?: 0L)
+                }
             )
 }
 
@@ -63,13 +71,13 @@ data class FileTreeLeaf(val stepsDown: List<String>, val file: Path)
 fun Path.walk(stepsDown: List<String>): Sequence<FileTreeLeaf> {
     val (dirs, files) = this.listLazy()
 
-    fun walkInto(dirs: Sequence<String>) =
-        dirs.sortedWith(ComparePaths).flatMap { directory ->
+    fun walkInto(dirs: Sequence<Path>) =
+        dirs.map { it.name }.sortedWith(ComparePaths).flatMap { directory ->
             (this / directory).walk(stepsDown + directory)
         }
 
-    fun walkAlong(files: Sequence<String>) =
-        files.filter { it.isAudioFileExt() }.sortedWith(CompareFiles)
+    fun walkAlong(files: Sequence<Path>) =
+        files.map { it.name }.filter { it.isAudioFileExt() }.sortedWith(CompareFiles)
             .map { FileTreeLeaf(stepsDown, it.toPath()) }
 
     return if (opt.reverse) walkAlong(files) + walkInto(dirs)
@@ -124,11 +132,11 @@ fun albumCopy(start: Instant, tracksTotal: Int) {
 
 fun appMain() {
     val start = Clock.System.now()
-    val tracksTotal = opt.src.toPath().walk()
-        .map { 1 }
-        .sum()
+    val firstPass: FirstPass = opt.src.toPath().walk()
+        .reduce { acc, i -> acc + i }
 
-    albumCopy(start, tracksTotal)
+    albumCopy(start, firstPass.track)
+    show(humanFine(firstPass.bytes))
 }
 
 fun show(str: String, trailingNewLine: Boolean = true) {
