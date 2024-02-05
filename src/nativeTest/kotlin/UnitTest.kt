@@ -54,60 +54,61 @@ class UnitTest {
         // misplaced, it's ignored.
         assertEquals("A B C", Reg.dots.replace("A. ..B..C", " "))
         assertEquals("A B C", Reg.quotedSubstrings.replace("A\"Dobby\"B\"Bobby\"C", " "))
-        assertEquals("", initials(""))
-        assertEquals("", initials(" "))
-        assertEquals("", initials(".. , .. "))
-        assertEquals("", initials(" ,, .,"))
-        assertEquals("L.", initials("l"))
-        assertEquals("A.G.", initials(", a. g, "))
-        assertEquals("I.V-A.,E.C.N.", initials("- , -I.V.-A,E.C.N-, ."))
-        assertEquals("J.R.R.T.", initials("John ronald reuel Tolkien"))
-        assertEquals("E.B.S.", initials("  e.B.Sledge "))
-        assertEquals("A.C-G.", initials("Apsley Cherry-Garrard"))
-        assertEquals("W.S-C-G.", initials("Windsor Saxe-\tCoburg - Gotha"))
-        assertEquals("E.K-R.", initials("Elisabeth Kubler-- - Ross"))
-        assertEquals("F-S.A-B.L.", initials("  Fitz-Simmons Ashton-Burke Leigh"))
-        assertEquals("A.B.", initials("Arleigh \"31-knot\"Burke "))
-        assertEquals("H.C.,K.P.", initials("Harry \"Bing\" Crosby, Kris \"Tanto\" Paronto"))
-        assertEquals(
-            "W.J.D.,M.C.G.",
-            initials("William J. \"Wild Bill\" Donovan, Marta \"Cinta Gonzalez")
-        )
-        assertEquals("A.S.,B.S.", initials("a.s , - . ,b.s."))
-        assertEquals("A.S.,B.S.", initials("A. Strugatsky, B...Strugatsky."))
-        assertEquals("И.К.,Й.Н.", initials("Иржи Кропачек,, Йозеф Новотный"))
-        assertEquals("Я.динА.,Ш.д'А.", initials("Язон динАльт, Шарль д'Артаньян"))
-        assertEquals("C.d.B.d.C.d'A.", initials("Charles de Batz de Castelmore d'Artagnan"))
-        assertEquals("M.D.M.,H.o.L.", initials("Mario Del Monaco, Hutchinson of London"))
-        assertEquals("A.h.R.", initials("Anselm haut Rodric"))
-        assertEquals("А.о.Р.", initials("Ансельм от Родрик"))
-        assertEquals("L.W.DiC.", initials("Leonardo Wilhelm DiCaprio"))
-        assertEquals("Л.В.д.К.", initials("леонардо вильгельм ди каприо"))
-        assertEquals("K.z.S.", initials("kapitän zur see"))
-        assertEquals("D.B.,G.v.R.", initials("De Beers, Guido van Rossum"))
-        assertEquals("М.ф.Р.", initials("Манфред фон Рихтгофен"))
-        assertEquals("A.J.d.P.", initials("Armand Jean du Plessis"))
-        assertEquals("J.D.v.d.W.", initials("johannes diderik van der waals"))
-        assertEquals("K.H.a.S.", initials("Karl Hård af Segerstad"))
-        assertEquals("Ö.Ü.A.", initials("Österreich über alles"))
-        assertEquals("J.E.d.S.", initials("José Eduardo dos Santos"))
-        assertEquals("Gnda'K.", initials("Gnda'Ke"))
-        assertEquals("G.", initials("gnda'ke"))
-        assertEquals("G.", initials("gnda'"))
-        assertEquals("'B.", initials("'Bravo"))
-        assertEquals("'.", initials("'"))
-        assertEquals("'B.", initials("'B"))
-        assertEquals("'b.", initials("'b"))
-        assertEquals("dA.", initials("dA"))
-        assertEquals("DA.", initials("DA"))
-        assertEquals("DA.", initials("DAMadar"))
-        assertEquals("П.Ст.", initials("Плиний Старший"))
-        assertEquals("P.t.E.", initials("Pliny the Elder"))
-        assertEquals("П.Мл.", initials("Плиний Младший"))
-        assertEquals("П.Мл.", initials("Плиний Мл."))
-        assertEquals("G.S.P.Jr.", initials("George Smith Patton Jr."))
-        assertEquals("Д.С.П.ст.", initials("Джордж Смит паттон ст"))
-        assertEquals("R.Sr.", initials("Redington Sr"))
+        listOf(
+            "" to "",
+            "" to " ",
+            "" to ".. , .. ",
+            "" to " ,, .,",
+            "L." to "l",
+            "A.G." to ", a. g, ",
+            "I.V-A.,E.C.N." to "- , -I.V.-A,E.C.N-, .",
+            "J.R.R.T." to "John ronald reuel Tolkien",
+            "E.B.S." to "  e.B.Sledge ",
+            "A.C-G." to "Apsley Cherry-Garrard",
+            "W.S-C-G." to "Windsor Saxe-\tCoburg - Gotha",
+            "E.K-R." to "Elisabeth Kubler-- - Ross",
+            "F-S.A-B.L." to "  Fitz-Simmons Ashton-Burke Leigh",
+            "A.B." to "Arleigh \"31-knot\"Burke ",
+            "H.C.,K.P." to "Harry \"Bing\" Crosby, Kris \"Tanto\" Paronto",
+            "W.J.D.,M.C.G." to "William J. \"Wild Bill\" Donovan, Marta \"Cinta Gonzalez",
+            "A.S.,B.S." to "a.s , - . ,b.s.",
+            "A.S.,B.S." to "A. Strugatsky, B...Strugatsky.",
+            "И.К.,Й.Н." to "Иржи Кропачек,, Йозеф Новотный",
+            "Я.динА.,Ш.д'А." to "Язон динАльт, Шарль д'Артаньян",
+            "C.d.B.d.C.d'A." to "Charles de Batz de Castelmore d'Artagnan",
+            "M.D.M.,H.o.L." to "Mario Del Monaco, Hutchinson of London",
+            "A.h.R." to "Anselm haut Rodric",
+            "А.о.Р." to "Ансельм от Родрик",
+            "L.W.DiC." to "Leonardo Wilhelm DiCaprio",
+            "Л.В.д.К." to "леонардо вильгельм ди каприо",
+            "K.z.S." to "kapitän zur see",
+            "D.B.,G.v.R." to "De Beers, Guido van Rossum",
+            "М.ф.Р." to "Манфред фон Рихтгофен",
+            "A.J.d.P." to "Armand Jean du Plessis",
+            "J.D.v.d.W." to "johannes diderik van der waals",
+            "K.H.a.S." to "Karl Hård af Segerstad",
+            "Ö.Ü.A." to "Österreich über alles",
+            "J.E.d.S." to "José Eduardo dos Santos",
+            "Gnda'K." to "Gnda'Ke",
+            "G." to "gnda'ke",
+            "G." to "gnda'",
+            "'B." to "'Bravo",
+            "'." to "'",
+            "'B." to "'B",
+            "'b." to "'b",
+            "dA." to "dA",
+            "DA." to "DA",
+            "DA." to "DAMadar",
+            "П.Ст." to "Плиний Старший",
+            "P.t.E." to "Pliny the Elder",
+            "П.Мл." to "Плиний Младший",
+            "П.Мл." to "Плиний Мл.",
+            "G.S.P.Jr." to "George Smith Patton Jr.",
+            "Д.С.П.ст." to "Джордж Смит паттон ст",
+            "R.Sr." to "Redington Sr",
+        ).forEach { (initials, authors) ->
+            assertEquals(initials, authors.initials)
+        }
     }
 
     @Test

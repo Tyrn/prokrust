@@ -83,10 +83,9 @@ val nobiliaryParticles = arrayOf(
 )
 
 /**
- * Reduces [authors] to initials.
- * @return the string with nice initials.
+ * A comma-separated list of authors, reduced to initials.
  */
-fun initials(authors: String): String {
+val String.initials get(): String {
     fun formInitial(name: String): String {
         val cut = name.split("'")
         if (cut.size > 1 && cut[1].isNotEmpty()) {  // Deal with '.
@@ -112,7 +111,7 @@ fun initials(authors: String): String {
         }
         return name[0].toString().uppercase()
     }
-    return authors
+    return this
         .replace(Reg.quotedSubstrings, " ")
         .replace("\"", " ")
         .split(",")
@@ -132,7 +131,7 @@ fun initials(authors: String): String {
 
 /**
  * A human readable string representation
- * of [this], nicely rounded.
+ * of a long integer, nicely rounded.
  */
 val Long.humanBytes get(): String {
     val unitList = arrayOf(
