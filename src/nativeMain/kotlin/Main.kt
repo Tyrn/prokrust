@@ -22,6 +22,21 @@ class ComparePaths {
     }
 }
 
+/**
+ * The file isn't to be ignored.
+ * @receiver String
+ */
+fun String.isEligible(): Boolean {
+    if (opt.fileType == null) return true
+    val e = opt.fileType ?: ""
+    val name = this.toPath().name
+
+    if ('*' in e || '[' in e || ']' in e || '?' in e)
+        return name.matches(e.replace("*", ".*").toRegex())
+
+    return this.toPath().suffix.uppercase().trim('.') == e.uppercase().trim('.')
+}
+
 val knownExtensions =
     arrayOf(".MP3", ".OGG", ".M4A", ".M4B", ".OPUS", ".WMA", ".FLAC", ".APE", ".WAV")
 
@@ -31,7 +46,7 @@ val knownExtensions =
  * @return this name has an audio file extension.
  */
 fun String.isAudioFileExt(): Boolean {
-    return knownExtensions
+    return this.isEligible() && knownExtensions
         .any { this.toPath().suffix.uppercase() == it }
 }
 
@@ -52,8 +67,8 @@ fun Path.walk(): Sequence<FirstPass> {
                     + files.filter { it.toString().isAudioFileExt() }
                 .map { file ->
                     FirstPass(
-                        if (file.toString().isAudioFileExt()) sequenceOf(" ${Icon.warning} Boo!")
-                        else sequenceOf(),
+                        if (file.toString().isAudioFileExt()) sequenceOf()
+                        else sequenceOf(" ${Icon.warning} Boo!"),
                         1,
                         FileSystem.SYSTEM.metadata(file).size ?: 0L
                     )
