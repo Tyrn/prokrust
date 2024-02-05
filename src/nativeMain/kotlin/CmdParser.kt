@@ -5,9 +5,20 @@ import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
 
-const val useIcon = '\u2b50'
-const val crossIcon = '\u274c'
-const val whatIcon = '\u2754'
+object Icon {
+    const val invalid = '\u274c'
+    // const val warning = '\u01f4a7'
+    // const val bdelim = '\u01f539'
+    // const val odelim = '\u01f538'
+    const val rsusp = '\u2753'
+    const val suspicious = '\u2754'
+    // const val done = '\u01f7e2'
+    const val column = '\u2714'
+    const val link = '\u26a1'
+    // const val start = '\u01f4a3'
+    // const val stop = '\u01f4a5'
+    const val use = '\u2b50'
+}
 
 class Prokrust : CliktCommand(
     help =
@@ -20,9 +31,9 @@ class Prokrust : CliktCommand(
     is set, tags "Title", "Artist", and "Album" can be replaced optionally.
     The writing process is strictly sequential: either starting with the number one file,
     or in the reverse order. This can be important for some mobile devices.
-    $crossIcon Broken media;
-    $whatIcon Suspicious media;
-    $useIcon Really useful options.
+    ${Icon.invalid} Broken media;
+    ${Icon.suspicious} Suspicious media;
+    ${Icon.use} Really useful options.
 
     Examples; <src> as a directory:
 
@@ -35,7 +46,7 @@ class Prokrust : CliktCommand(
     """,
 ) {
     val verbose by option(
-        "-v", "--verbose", help = "${useIcon} Verbose output",
+        "-v", "--verbose", help = "${Icon.use} Verbose output",
     ).flag()
     val dropTracknumber by option(
         "-d",
@@ -95,17 +106,17 @@ class Prokrust : CliktCommand(
     val unifiedName by option(
         "-u",
         "--unified-name",
-        help = "${useIcon} <text> for everything unspecified",
+        help = "${Icon.use} <text> for everything unspecified",
     )
     val artist by option(
         "-a",
         "--artist",
-        help = "${useIcon} Artist tag",
+        help = "${Icon.use} Artist tag",
     )
     val album by option(
         "-m",
         "--album",
-        help = "${useIcon} Album tag",
+        help = "${Icon.use} Album tag",
     )
     val albumNum by option(
         "-b",

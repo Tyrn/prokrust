@@ -8,6 +8,17 @@ import kotlin.test.assertTrue
 
 class UnitTest {
     @Test
+    fun testSequence() {
+        assertContentEquals(
+            expected = listOf("a", "b", "c"),
+            actual = (listOf("a", "b").asSequence() + listOf("c").asSequence()).toList()
+        )
+        assertContentEquals(
+            expected = listOf("a", "b"),
+            actual = (listOf("a", "b").asSequence() + sequenceOf()).toList()
+        )
+    }
+    @Test
     fun testStringStripNumbers() {
         assertContentEquals(
             intArrayOf(11, 2, 144).toList(),

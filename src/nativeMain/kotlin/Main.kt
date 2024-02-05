@@ -35,10 +35,10 @@ fun String.isAudioFileExt(): Boolean {
         .any { this.toPath().suffix.uppercase() == it }
 }
 
-data class FirstPass(val tracks: Int, val bytes: Long)
+data class FirstPass(val log: Sequence<String>, val tracks: Int, val bytes: Long)
 
 operator fun FirstPass.plus(b: FirstPass): FirstPass =
-    FirstPass(this.tracks + b.tracks, this.bytes + b.bytes)
+    FirstPass(this.log + b.log, this.tracks + b.tracks, this.bytes + b.bytes)
 
 /**
  * Walks down the directory tree.
@@ -51,7 +51,12 @@ fun Path.walk(): Sequence<FirstPass> {
             dirs.map { it.name }.flatMap { directory -> (this / directory).walk() }
                     + files.filter { it.toString().isAudioFileExt() }
                 .map { file ->
-                    FirstPass(1, FileSystem.SYSTEM.metadata(file).size ?: 0L)
+                    FirstPass(
+                        if (file.toString().isAudioFileExt()) sequenceOf("boo")
+                        else sequenceOf(),
+                        1,
+                        FileSystem.SYSTEM.metadata(file).size ?: 0L
+                    )
                 }
             )
 }
@@ -137,6 +142,7 @@ fun appMain() {
 
     albumCopy(start, total)
     show(total.bytes.humanBytes)
+    total.log.forEach { show(it) }
 }
 
 fun show(str: String, trailingNewLine: Boolean = true) {
