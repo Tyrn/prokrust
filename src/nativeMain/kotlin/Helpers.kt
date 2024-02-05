@@ -131,11 +131,10 @@ fun initials(authors: String): String {
 }
 
 /**
- * Makes a human readable string representation
- * of [bytes], nicely rounded.
- * @return the rounded and annotated value.
+ * A human readable string representation
+ * of [this], nicely rounded.
  */
-fun humanFine(bytes: Long): String {
+val Long.humanBytes get(): String {
     val unitList = arrayOf(
         { q: Double -> q.trim(0) },
         { q: Double -> "${q.trim(0)}kB" },
@@ -144,17 +143,17 @@ fun humanFine(bytes: Long): String {
         { q: Double -> "${q.trim(2)}TB" },
         { q: Double -> "${q.trim(2)}PB" },
     )
-    if (bytes > 1) {
+    if (this > 1) {
         val exponent = min(
-            a = log(bytes.toDouble(), 1024.toDouble()).toInt(),
+            a = log(this.toDouble(), 1024.toDouble()).toInt(),
             b = unitList.size - 1
         )
-        val quotient = bytes / 1024.toDouble().pow(exponent)
+        val quotient = this / 1024.toDouble().pow(exponent)
         return unitList[exponent](quotient)
     }
-    if (bytes == 0L) return "0"
-    if (bytes == 1L) return "1"
-    throw RuntimeException("humanFine error; bytes: $bytes")
+    if (this == 0L) return "0"
+    if (this == 1L) return "1"
+    throw RuntimeException("humanBytes error; bytes: $this")
 }
 
 /**

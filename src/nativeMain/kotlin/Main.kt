@@ -136,7 +136,7 @@ fun appMain() {
         .reduce { acc, i -> acc + i }
 
     albumCopy(start, total)
-    show(humanFine(total.bytes))
+    show(total.bytes.humanBytes)
 }
 
 fun show(str: String, trailingNewLine: Boolean = true) {

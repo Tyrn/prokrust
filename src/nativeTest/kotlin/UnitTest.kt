@@ -117,20 +117,20 @@ class UnitTest {
 
     @Test
     fun testHumanFine() {
-        assertEquals("0", humanFine(0))
-        assertEquals("1", humanFine(1))
-        assertEquals("2", humanFine(2))
-        assertEquals("42", humanFine(42))
-        assertEquals("2kB", humanFine(1800))
-        assertEquals("117.7MB", humanFine(123456789))
-        assertEquals("114.98GB", humanFine(123456789123))
-        assertEquals("1kB", humanFine(1024))
-        assertEquals("1.0MB", humanFine(1024.toDouble().pow(2).toLong()))
-        assertEquals("1.00GB", humanFine(1024.toDouble().pow(3).toLong()))
-        assertEquals("440.3MB", humanFine(1024.toDouble().pow(3).times(.43).toLong()))
-        assertEquals("1.00TB", humanFine(1024.toDouble().pow(4).toLong()))
-        assertEquals("440.32GB", humanFine(1024.toDouble().pow(4).times(.43).toLong()))
-        assertEquals("1.00PB", humanFine(1024.toDouble().pow(5).toLong()))
+        assertEquals("0", 0L.humanBytes)
+        assertEquals("1", 1L.humanBytes)
+        assertEquals("2", 2L.humanBytes)
+        assertEquals("42", 42L.humanBytes)
+        assertEquals("2kB", 1800L.humanBytes)
+        assertEquals("117.7MB", 123456789L.humanBytes)
+        assertEquals("114.98GB", 123456789123L.humanBytes)
+        assertEquals("1kB", 1024L.humanBytes)
+        assertEquals("1.0MB", 1024L.toDouble().pow(2).toLong().humanBytes)
+        assertEquals("1.00GB", 1024L.toDouble().pow(3).toLong().humanBytes)
+        assertEquals("440.3MB", 1024L.toDouble().pow(3).times(.43).toLong().humanBytes)
+        assertEquals("1.00TB", 1024L.toDouble().pow(4).toLong().humanBytes)
+        assertEquals("440.32GB", 1024L.toDouble().pow(4).times(.43).toLong().humanBytes)
+        assertEquals("1.00PB", 1024L.toDouble().pow(5).toLong().humanBytes)
     }
 
     @Test
