@@ -6,18 +6,18 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
 
 object Icon {
-    const val invalid = '\u274c'
-    // const val warning = '\u01f4a7'
-    // const val bdelim = '\u01f539'
-    // const val odelim = '\u01f538'
-    const val rsusp = '\u2753'
-    const val suspicious = '\u2754'
-    // const val done = '\u01f7e2'
-    const val column = '\u2714'
-    const val link = '\u26a1'
-    // const val start = '\u01f4a3'
-    // const val stop = '\u01f4a5'
-    const val use = '\u2b50'
+    const val invalid = '❌'
+    const val warning = "💧"
+    const val bdelim = "🔹"
+    const val odelim = "🔸"
+    const val rsusp = '❓'
+    const val suspicious = '❔'
+    const val done = "🟢"
+    const val column = '✔'
+    const val link = '⚡'
+    const val start = "💣"
+    const val stop = "💥"
+    const val use = '⭐'
 }
 
 class Prokrust : CliktCommand(

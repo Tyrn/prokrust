@@ -52,7 +52,7 @@ fun Path.walk(): Sequence<FirstPass> {
                     + files.filter { it.toString().isAudioFileExt() }
                 .map { file ->
                     FirstPass(
-                        if (file.toString().isAudioFileExt()) sequenceOf("boo")
+                        if (file.toString().isAudioFileExt()) sequenceOf(" ${Icon.warning} Boo!")
                         else sequenceOf(),
                         1,
                         FileSystem.SYSTEM.metadata(file).size ?: 0L
