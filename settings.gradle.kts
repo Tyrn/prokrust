@@ -1,10 +1,11 @@
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
-            version("clikt", "4.2.2")
             version("kotlin", "1.9.22")
+            version("clikt", "4.2.2")
             version("okio", "3.7.0")
             version("kotlinx-datetime", "0.5.0")
+            version("kotter", "1.1.1")
             version("kotest", "5.7.2")
             plugin(
                 "kotlin-multiplatform",
@@ -35,6 +36,11 @@ dependencyResolutionManagement {
                 "org.jetbrains.kotlinx",
                 "kotlinx-datetime"
             ).versionRef("kotlinx-datetime")
+            library(
+                "kotter",
+                "com.varabyte.kotter",
+                "kotter"
+            ).versionRef("kotter")
             // library(
             //     "kotest-",
             //     "io.kotest",

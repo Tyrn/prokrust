@@ -29,6 +29,7 @@ kotlin {
                 implementation(libs.clikt.clikt)
                 implementation(libs.okio.okio)
                 implementation(libs.datetime)
+                implementation(libs.kotter)
             }
         }
         val nativeTest by getting {
