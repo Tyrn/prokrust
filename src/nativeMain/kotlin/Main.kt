@@ -58,7 +58,7 @@ operator fun FirstPass.plus(b: FirstPass): FirstPass =
 /**
  * Walks down the directory tree.
  * @receiver Path
- * @return The sequence of all files.
+ * @return The sequence of FirstPass file attributes.
  */
 fun Path.walk(): Sequence<FirstPass> {
     val (dirs, files) = this.listLazy()
@@ -70,7 +70,7 @@ fun Path.walk(): Sequence<FirstPass> {
                         if (file.toString().isAudioFileExt()) sequenceOf()
                         else sequenceOf(" ${Icon.warning} Boo!"),
                         1,
-                        FileSystem.SYSTEM.metadata(file).size ?: 0L
+                        file.size
                     )
                 }
             )
@@ -123,15 +123,25 @@ fun Path.fileCopyAndSetTags(i: Int, dst: Path) {
 }
 
 fun FileTreeLeaf.trackCopy(i: Int, dst: Path, total: FirstPass) {
-    val destination = dst.join(this.stepsDown)
-    FileSystem.SYSTEM.createDirectories(destination, false)
+    val depth = if (opt.treeDst) this.stepsDown else listOf()
+    val dstDir = dst.join(depth)
+    FileSystem.SYSTEM.createDirectories(dstDir, false)
 
-    opt.src.toPath().join(this.stepsDown).div(this.file)
-        .fileCopyAndSetTags(i, destination / this.file)
+    val source = opt.src.toPath().join(this.stepsDown).div(this.file)
+    val destination = dstDir / this.file
 
-    if (opt.verbose)
-        show("${i.toString(total.tracks.toString().length)}/${total.tracks} ${destination / this.file}")
-    else show(".", false)
+    source.fileCopyAndSetTags(i, destination)
+
+    if (opt.verbose) {
+        show(
+            "${i.toString(total.tracks.toString().length)}/${total.tracks} ${dstDir / this.file}",
+            false
+        )
+        val increase = destination.size - source.size
+        if (increase > 0L) show(" +$increase", false)
+        else if (increase < 0L) show(" $increase", false)
+        show("")
+    } else show(".", false)
 }
 
 fun albumCopy(start: Instant, total: FirstPass) {
@@ -141,13 +151,16 @@ fun albumCopy(start: Instant, total: FirstPass) {
     FileSystem.SYSTEM.createDirectory(dst, false)
 
     if (!opt.verbose)
-        show("Starting ", false)
+        show(" ${Icon.start} ", false)
 
     opt.src.toPath().walk(listOf()).forEachIndexed { i, srcTreeLeaf ->
         srcTreeLeaf.trackCopy(norm(i), dst, total)
     }
 
-    show(" Time: ${Clock.System.stop(start)}")
+    if (!opt.verbose)
+        show(" ${Icon.stop}")
+
+    show(" ${Icon.done} Done (${total.tracks}, ${total.bytes.humanBytes}; ${Clock.System.stop(start)})")
 }
 
 fun appMain() {
@@ -156,7 +169,7 @@ fun appMain() {
         .reduce { acc, i -> acc + i }
 
     albumCopy(start, total)
-    show(total.bytes.humanBytes)
+
     total.log.forEach { show(it) }
 }
 
