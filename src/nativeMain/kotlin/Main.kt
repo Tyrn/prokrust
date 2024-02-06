@@ -134,7 +134,7 @@ fun FileTreeLeaf.trackCopy(i: Int, dst: Path, total: FirstPass) {
 
     if (opt.verbose) {
         show(
-            "${i.toString(total.tracks.toString().length)}/${total.tracks} ${Icon.column} ${dstDir / this.file}",
+            "${i.toString(total.tracks.toString().length)}/${total.tracks} ${Icon.column} $destination",
             false
         )
         val increase = destination.size - source.size
@@ -153,12 +153,17 @@ fun albumCopy(start: Instant, total: FirstPass) {
     if (!opt.verbose)
         show(" ${Icon.start} ", false)
 
-    opt.src.toPath().walk(listOf()).forEachIndexed { i, srcTreeLeaf ->
-        srcTreeLeaf.trackCopy(norm(i), dst, total)
+    var secondPassTracks = 0
+    opt.src.toPath().walk(listOf()).forEach { srcTreeLeaf ->
+        srcTreeLeaf.trackCopy(norm(secondPassTracks), dst, total)
+        secondPassTracks++
     }
 
     if (!opt.verbose)
         show(" ${Icon.stop}")
+
+    if (total.tracks != secondPassTracks)
+        throw RuntimeException("Track count, 1: ${total.tracks}; 2: $secondPassTracks")
 
     show(" ${Icon.done} Done (${total.tracks}, ${total.bytes.humanBytes}; ${Clock.System.stop(start)})")
 }
