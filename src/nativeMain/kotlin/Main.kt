@@ -183,11 +183,13 @@ fun appMain() {
         section {
             text("Checking... ")
             if (total != null) {
-                if (total!!.tracks > 0)
+                val tot = total!!
+                if (tot.tracks > 0)
                     if (opt.count) {
-                        text("Valid: ${total?.tracks} file(s);")
-                        text(" Volume: ${total?.bytes?.humanBytes};")
-                        text(" Average: ${(total?.bytes?.div(total!!.tracks))?.humanBytes};")
+                        text("Valid: ${tot.tracks} file(s);")
+                        text(" Volume: ${tot.bytes.humanBytes};")
+                        if (tot.tracks > 1)
+                            text(" Average: ${(tot.bytes / tot.tracks).humanBytes};")
                         text(" Time: ${Clock.System.stop(start)}")
                     } else text("Done in ${Clock.System.stop(start)}")
                 else text("No audio files found")
