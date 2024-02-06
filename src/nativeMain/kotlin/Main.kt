@@ -1,3 +1,6 @@
+import com.varabyte.kotter.foundation.session
+import com.varabyte.kotter.foundation.text.text
+import com.varabyte.kotter.foundation.text.textLine
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import okio.FileSystem
@@ -170,12 +173,31 @@ fun albumCopy(start: Instant, total: FirstPass) {
 
 fun appMain() {
     val start = Clock.System.now()
-    val total: FirstPass = opt.src.toPath().walk()
-        .reduce { acc, i -> acc + i }
+    var total: FirstPass? = null
 
-    albumCopy(start, total)
+    session {
+        section {
+            text("Checking... ")
+            if (total != null) {
+                if (total!!.tracks > 0)
+                    if (opt.count) {
+                        text("Valid: ${total?.tracks} file(s);")
+                        text(" Volume: ${total?.bytes?.humanBytes};")
+                        text(" Average: ${(total?.bytes?.div(total!!.tracks))?.humanBytes};")
+                        text(" Time: ${Clock.System.stop(start)}")
+                    } else text("Done in ${Clock.System.stop(start)}")
+                else text("No audio files found")
+            }
+        }.run {
+            total = opt.src.toPath().walk()
+                .reduce { acc, i -> acc + i }
+            rerender()
+        }
+    }
 
-    total.log.forEach { show(it) }
+    if (!opt.count && total!!.tracks > 0) albumCopy(start, total!!)
+
+    total!!.log.forEach { show(it) }
 }
 
 fun show(str: String, trailingNewLine: Boolean = true) {

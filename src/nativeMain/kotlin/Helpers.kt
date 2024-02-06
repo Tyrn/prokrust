@@ -164,6 +164,6 @@ val Long.humanBytes get(): String {
  */
 fun Clock.System.stop(start: Instant): String {
     val space = (this.now() - start).inWholeMilliseconds
-    if (space < 3000L) return "$space ms"
-    return "${space.toDouble().div(1000).trim(1)} s"
+    if (space < 3000L) return "${space}ms"
+    return "${space.toDouble().div(1000).trim(1)}s"
 }
