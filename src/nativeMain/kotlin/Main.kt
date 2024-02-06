@@ -53,7 +53,11 @@ fun String.isAudioFileExt(): Boolean {
         .any { this.toPath().suffix.uppercase() == it }
 }
 
-data class FirstPass(val log: Sequence<String>, val tracks: Int, val bytes: Long)
+data class FirstPass(
+    val log: Sequence<String> = sequenceOf(),
+    val tracks: Int = 0,
+    val bytes: Long = 0L
+)
 
 operator fun FirstPass.plus(b: FirstPass): FirstPass =
     FirstPass(this.log + b.log, this.tracks + b.tracks, this.bytes + b.bytes)
@@ -190,7 +194,7 @@ fun appMain() {
             }
         }.run {
             total = opt.src.toPath().walk()
-                .reduce { acc, i -> acc + i }
+                .fold(FirstPass()) { acc, i -> acc + i }
             rerender()
         }
     }
