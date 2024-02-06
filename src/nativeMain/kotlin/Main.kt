@@ -134,12 +134,12 @@ fun FileTreeLeaf.trackCopy(i: Int, dst: Path, total: FirstPass) {
 
     if (opt.verbose) {
         show(
-            "${i.toString(total.tracks.toString().length)}/${total.tracks} ${dstDir / this.file}",
+            "${i.toString(total.tracks.toString().length)}/${total.tracks} ${Icon.column} ${dstDir / this.file}",
             false
         )
         val increase = destination.size - source.size
-        if (increase > 0L) show(" +$increase", false)
-        else if (increase < 0L) show(" $increase", false)
+        if (increase > 0L) show(" ${Icon.column} +$increase", false)
+        else if (increase < 0L) show(" ${Icon.column} $increase", false)
         show("")
     } else show(".", false)
 }
