@@ -4,6 +4,7 @@ import com.github.ajalt.clikt.parameters.arguments.validate
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
+import okio.Path.Companion.toPath
 
 object Icon {
     const val invalid = '❌'
@@ -119,16 +120,17 @@ class Prokrust : CliktCommand(
         help = "${Icon.use} Album tag",
     )
 
-    val album get() =
-        if (unifiedName != null && albumName == null) unifiedName else albumName
+    val album
+        get() =
+            if (unifiedName != null && albumName == null) unifiedName else albumName
 
     val albumNum by option(
         "-b",
         "--album-num",
         help = "0..99; prepend <int> to the destination root directory name",
     ).int()
-    val src by argument("src").validate { require(it.isNotBlank()) { "Source file cannot be blank." } }
-    val dst by argument("dst").validate { require(it.isNotBlank()) { "Destination cannot be blank." } }
+    val src by argument("src").validate { require(it.toPath().exists) { "Invalid source file or directory." } }
+    val dst by argument("dst").validate { require(it.toPath().exists) { "Invalid destination directory." } }
 
     override fun run() {
         appMain()
