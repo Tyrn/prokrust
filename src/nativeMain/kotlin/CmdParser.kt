@@ -113,11 +113,15 @@ class Prokrust : CliktCommand(
         "--artist",
         help = "${Icon.use} Artist tag",
     )
-    val album by option(
+    private val albumName by option(
         "-m",
         "--album",
         help = "${Icon.use} Album tag",
     )
+
+    val album get() =
+        if (unifiedName != null && albumName == null) unifiedName else albumName
+
     val albumNum by option(
         "-b",
         "--album-num",
