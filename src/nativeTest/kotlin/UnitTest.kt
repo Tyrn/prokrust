@@ -176,6 +176,7 @@ class UnitTest {
     @Test
     fun testStartsWith() {
         listOf(
+            "/a/b/c" to "/a/b/c/",
             "/a/b/c/d" to "/a/b/c",
             "/a/b/c/d" to "/a/b/c/",
             "/A/B/C/D" to "/A/B/C",

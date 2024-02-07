@@ -178,22 +178,26 @@ fun Path.decorate(i: Int, stepsDown: List<String>, sumTotal: FirstPass): String 
 fun FileTreeLeaf.trackCopy(i: Int, dst: Path, sumTotal: FirstPass) {
     val depth = if (opt.treeDst) this.stepsDown else listOf()
     val dstDir = dst.join(depth)
-    FileSystem.SYSTEM.createDirectories(dstDir, false)
 
     val source = opt.src.toPath().join(this.stepsDown).div(this.file)
     val destination = dstDir / this.file.decorate(i, this.stepsDown, sumTotal)
 
-    source.fileCopyAndSetTags(i, destination)
+    if (!opt.dryRun) {
+        FileSystem.SYSTEM.createDirectories(dstDir, false)
+        source.fileCopyAndSetTags(i, destination)
+    }
 
     if (opt.verbose) {
         show(
             "${i.toString(sumTotal.tracks.toString().length)}/${sumTotal.tracks} ${Icon.column} $destination",
             false
         )
-        val increase = destination.size - source.size
-        if (increase > 0L) show(" ${Icon.column} +$increase", false)
-        else if (increase < 0L) show(" ${Icon.column} $increase", false)
-        show("")
+        if (!opt.dryRun) {
+            val increase = destination.size - source.size
+            if (increase > 0L) show(" ${Icon.column} +$increase", false)
+            else if (increase < 0L) show(" ${Icon.column} $increase", false)
+            show("")
+        } else show(" ${Icon.column} ${source.size.humanBytes}")
     } else show(".", false)
 }
 
@@ -207,7 +211,8 @@ fun albumCopy(start: Instant, sumTotal: FirstPass) {
     inline fun norm(i: Int) = if (opt.reverse) sumTotal.tracks - i else i + 1
 
     val dst = dstCalculate()
-    FileSystem.SYSTEM.createDirectory(dst, false)
+    if (!opt.dryRun)
+        FileSystem.SYSTEM.createDirectory(dst, false)
 
     if (!opt.verbose)
         show(" ${Icon.start} ", false)
@@ -224,7 +229,13 @@ fun albumCopy(start: Instant, sumTotal: FirstPass) {
     if (sumTotal.tracks != secondPassTracks)
         throw RuntimeException("Track count, 1: ${sumTotal.tracks}; 2: $secondPassTracks")
 
-    show(" ${Icon.done} Done (${sumTotal.tracks}, ${sumTotal.bytes.humanBytes}; ${Clock.System.stop(start)})")
+    show(
+        " ${Icon.done} Done (${sumTotal.tracks}, ${sumTotal.bytes.humanBytes}; ${
+            Clock.System.stop(
+                start
+            )
+        })"
+    )
 }
 
 /**
@@ -257,9 +268,23 @@ fun appMain() {
         }
     }
 
+    val log = sumTotal!!.log + if (opt.count || !opt.dst.toPath().startsWith(opt.src.toPath()))
+        sequenceOf()
+    else {
+        val dstMsg = " ${Icon.warning} Target directory \"${opt.dst.toPath()}\""
+        val srcMsg = " ${Icon.warning} is inside source \"${opt.src.toPath()}\""
+        if (opt.dryRun) sequenceOf(dstMsg, srcMsg, " ${Icon.warning} It won't run.")
+        else {
+            show(dstMsg)
+            show(srcMsg)
+            show(" ${Icon.warning} No go.")
+            return
+        }
+    }
+
     if (!opt.count && sumTotal!!.tracks > 0) albumCopy(start, sumTotal!!)
 
-    sumTotal!!.log.forEach { show(it) }
+    log.forEach { show(it) }
 }
 
 /**
