@@ -9,6 +9,7 @@ import kotlinx.datetime.Instant
 import okio.FileSystem
 import okio.Path
 import okio.Path.Companion.toPath
+import kotlin.system.exitProcess
 import kotlin.time.Duration.Companion.milliseconds
 
 class CompareFiles {
@@ -218,8 +219,16 @@ fun albumCopy(start: Instant, sumTotal: FirstPass) {
     inline fun norm(i: Int) = if (opt.reverse) sumTotal.tracks - i else i + 1
 
     val dst = dstCalculate()
-    if (!opt.dryRun)
+    if (!opt.dropDst && !opt.dryRun) {
+        if (dst.exists) {
+            if (opt.overwrite) dst.deleteRecursively()
+            else {
+                show(" ${Icon.warning} Target directory \"${dst.absolute}\" already exists.")
+                return
+            }
+        }
         FileSystem.SYSTEM.createDirectory(dst, false)
+    }
 
     if (!opt.verbose)
         show(" ${Icon.start} ", false)
