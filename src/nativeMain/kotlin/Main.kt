@@ -1,3 +1,6 @@
+import com.varabyte.kotter.foundation.anim.TextAnim
+import com.varabyte.kotter.foundation.anim.text
+import com.varabyte.kotter.foundation.anim.textAnimOf
 import com.varabyte.kotter.foundation.session
 import com.varabyte.kotter.foundation.text.text
 import com.varabyte.kotter.foundation.liveVarOf
@@ -6,6 +9,7 @@ import kotlinx.datetime.Instant
 import okio.FileSystem
 import okio.Path
 import okio.Path.Companion.toPath
+import kotlin.time.Duration.Companion.milliseconds
 
 class CompareFiles {
     companion object : Comparator<String> {
@@ -250,19 +254,23 @@ fun appMain() {
         val start = Clock.System.now()
         var sumTotal by liveVarOf<FirstPass?>(null)
 
+        val animThinking = textAnimOf(Anim.thinking)
+
         section {
-            text(" Checking... ")
-            if (sumTotal != null) {
+            text(" Checking")
+            if (sumTotal == null) {
+                text(animThinking)
+            } else {
                 val sum = sumTotal!!
                 if (sum.tracks > 0)
                     if (opt.count) {
-                        text("Valid: ${sum.tracks} file(s);")
+                        text("... Valid: ${sum.tracks} file(s);")
                         text(" Volume: ${sum.bytes.humanBytes};")
                         if (sum.tracks > 1)
                             text(" Average: ${(sum.bytes / sum.tracks).humanBytes};")
                         text(" Time: ${Clock.System.stop(start)}")
-                    } else text("Done in ${Clock.System.stop(start)}")
-                else text("No audio files found")
+                    } else text("... Done in ${Clock.System.stop(start)}")
+                else text("... No audio files found")
             }
         }.run {
             sumTotal = opt.src.toPath().walk()  // First pass.
@@ -296,6 +304,10 @@ fun appMain() {
  */
 fun show(str: String, trailingNewLine: Boolean = true) {
     opt.echo(str, trailingNewLine)
+}
+
+object Anim {
+    val thinking = TextAnim.Template(listOf("", ".", "..", "..."), 125.milliseconds)
 }
 
 /**
