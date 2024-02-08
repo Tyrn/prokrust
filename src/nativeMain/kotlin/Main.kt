@@ -208,6 +208,8 @@ fun FileTreeLeaf.trackCopy(i: Int, dst: Path, sumTotal: FirstPass) {
  * statistics to format the console output.
  */
 fun albumCopy(start: Instant, sumTotal: FirstPass) {
+    if (opt.count || sumTotal.tracks < 1) return
+
     inline fun norm(i: Int) = if (opt.reverse) sumTotal.tracks - i else i + 1
 
     val dst = dstCalculate()
@@ -284,7 +286,7 @@ fun appMain() {
         }
     }
 
-    if (!opt.count && sumTotal!!.tracks > 0) albumCopy(start, sumTotal!!)
+    albumCopy(start, sumTotal!!)
 
     log.forEach { show(it) }
 }
