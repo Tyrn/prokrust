@@ -1,5 +1,6 @@
 import com.varabyte.kotter.foundation.session
 import com.varabyte.kotter.foundation.text.text
+import com.varabyte.kotter.foundation.liveVarOf
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import okio.FileSystem
@@ -245,10 +246,10 @@ fun albumCopy(start: Instant, sumTotal: FirstPass) {
  * Clickt command line parser.
  */
 fun appMain() {
-    val start = Clock.System.now()
-    var sumTotal: FirstPass? = null
-
     session {
+        val start = Clock.System.now()
+        var sumTotal by liveVarOf<FirstPass?>(null)
+
         section {
             text(" Checking... ")
             if (sumTotal != null) {
@@ -266,29 +267,28 @@ fun appMain() {
         }.run {
             sumTotal = opt.src.toPath().walk()  // First pass.
                 .fold(FirstPass()) { acc, i -> acc + i }
-            rerender()
         }
-    }
 
-    val firstPassLog = sumTotal!!.log + if (opt.count || !opt.dst.toPath().absolute
-            .startsWith(opt.src.toPath().absolute)
-    )
-        sequenceOf()
-    else {
-        val dstMsg = " ${Icon.warning} Target directory \"${opt.dst.toPath().absolute}\""
-        val srcMsg = " ${Icon.warning} is inside source \"${opt.src.toPath().absolute}\""
-        if (opt.dryRun) sequenceOf(dstMsg, srcMsg, " ${Icon.warning} It won't run.")
+        val firstPassLog = sumTotal!!.log + if (opt.count || !opt.dst.toPath().absolute
+                .startsWith(opt.src.toPath().absolute)
+        )
+            sequenceOf()
         else {
-            show(dstMsg)
-            show(srcMsg)
-            show(" ${Icon.warning} No go.")
-            return
+            val dstMsg = " ${Icon.warning} Target directory \"${opt.dst.toPath().absolute}\""
+            val srcMsg = " ${Icon.warning} is inside source \"${opt.src.toPath().absolute}\""
+            if (opt.dryRun) sequenceOf(dstMsg, srcMsg, " ${Icon.warning} It won't run.")
+            else {
+                show(dstMsg)
+                show(srcMsg)
+                show(" ${Icon.warning} No go.")
+                return@session
+            }
         }
+
+        albumCopy(start, sumTotal!!) // Second pass.
+
+        firstPassLog.forEach { show(it) }
     }
-
-    albumCopy(start, sumTotal!!) // Second pass.
-
-    firstPassLog.forEach { show(it) }
 }
 
 /**
