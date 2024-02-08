@@ -139,6 +139,7 @@ val Path.isDirectory get() = FileSystem.SYSTEM.metadataOrNull(this)?.isDirectory
 val Path.isRegularFile get() = FileSystem.SYSTEM.metadataOrNull(this)?.isRegularFile == true
 val Path.exists get() = FileSystem.SYSTEM.exists(this)
 val Path.size get() = FileSystem.SYSTEM.metadata(this).size ?: 0L
+val Path.absolute get() = FileSystem.SYSTEM.canonicalize(this)
 
 /**
  * Copies [this] file to [dst]. If [dst] is an existing file,

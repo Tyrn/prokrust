@@ -268,11 +268,13 @@ fun appMain() {
         }
     }
 
-    val log = sumTotal!!.log + if (opt.count || !opt.dst.toPath().startsWith(opt.src.toPath()))
+    val log = sumTotal!!.log + if (opt.count || !opt.dst.toPath().absolute
+            .startsWith(opt.src.toPath().absolute)
+    )
         sequenceOf()
     else {
-        val dstMsg = " ${Icon.warning} Target directory \"${opt.dst.toPath()}\""
-        val srcMsg = " ${Icon.warning} is inside source \"${opt.src.toPath()}\""
+        val dstMsg = " ${Icon.warning} Target directory \"${opt.dst.toPath().absolute}\""
+        val srcMsg = " ${Icon.warning} is inside source \"${opt.src.toPath().absolute}\""
         if (opt.dryRun) sequenceOf(dstMsg, srcMsg, " ${Icon.warning} It won't run.")
         else {
             show(dstMsg)
