@@ -250,7 +250,7 @@ fun appMain() {
 
     session {
         section {
-            text("Checking... ")
+            text(" Checking... ")
             if (sumTotal != null) {
                 val sum = sumTotal!!
                 if (sum.tracks > 0)
@@ -264,13 +264,13 @@ fun appMain() {
                 else text("No audio files found")
             }
         }.run {
-            sumTotal = opt.src.toPath().walk()
+            sumTotal = opt.src.toPath().walk()  // First pass.
                 .fold(FirstPass()) { acc, i -> acc + i }
             rerender()
         }
     }
 
-    val log = sumTotal!!.log + if (opt.count || !opt.dst.toPath().absolute
+    val firstPassLog = sumTotal!!.log + if (opt.count || !opt.dst.toPath().absolute
             .startsWith(opt.src.toPath().absolute)
     )
         sequenceOf()
@@ -286,9 +286,9 @@ fun appMain() {
         }
     }
 
-    albumCopy(start, sumTotal!!)
+    albumCopy(start, sumTotal!!) // Second pass.
 
-    log.forEach { show(it) }
+    firstPassLog.forEach { show(it) }
 }
 
 /**
